@@ -1,0 +1,28 @@
+<PAMDataset>
+  <SRS>PROJCS["unnamed",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433],AUTHORITY["EPSG","4326"]],PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",70],PARAMETER["central_meridian",-45],PARAMETER["scale_factor",1],PARAMETER["false_easting",0],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]]]</SRS>
+  <Metadata>
+    <MDI key="AREA_OR_POINT">Area</MDI>
+    <MDI key="NC_GLOBAL#Conventions">COARDS/CF-1.0</MDI>
+    <MDI key="NC_GLOBAL#description">Created 21-Oct-2013 16:51:47</MDI>
+    <MDI key="NC_GLOBAL#GMT_version">4.x</MDI>
+    <MDI key="NC_GLOBAL#history">File written by MATLAB function grdwrite.m</MDI>
+    <MDI key="NC_GLOBAL#title">Greenland_surface.nc</MDI>
+    <MDI key="x#actual_range">{-1300000,1200000}</MDI>
+    <MDI key="x#long_name">x</MDI>
+    <MDI key="y#actual_range">{-3500000,-500000}</MDI>
+    <MDI key="y#long_name">y</MDI>
+    <MDI key="z#_FillValue">-nan</MDI>
+    <MDI key="z#actual_range">{-9999,3474.65283203125}</MDI>
+    <MDI key="z#long_name">z</MDI>
+  </Metadata>
+  <PAMRasterBand band="1">
+    <NoDataValue le_hex_equiv="000000000000F87F">nan</NoDataValue>
+    <ColorInterp>Gray</ColorInterp>
+    <Metadata>
+      <MDI key="_FillValue">-nan</MDI>
+      <MDI key="actual_range">{-9999,3474.65283203125}</MDI>
+      <MDI key="long_name">z</MDI>
+      <MDI key="NETCDF_VARNAME">z</MDI>
+    </Metadata>
+  </PAMRasterBand>
+</PAMDataset>

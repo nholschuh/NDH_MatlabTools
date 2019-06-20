@@ -1,0 +1,29 @@
+function NaNOcean(grid1,outgrid)
+% If the ocean values around the grid are all set to 0, converts them to
+% NANs
+
+[x y z] = grdread(grid1);
+
+[xind yind ztemp] = find(z == 0);
+
+ztemp = z./z;
+
+[sumvalue counterfinal] = cellsum([xind yind],ztemp,1);
+
+for i = 1:length(xind)
+    if test(i) == 0
+    ztemp(yind(i),xind(i)) = 1;
+    end
+end
+
+for i = 1:length(x)
+    for j = 1:length(y)
+        if ztemp(j,i) == 0
+            z(j,i) = NaN;
+        end
+    end
+end
+
+grdwrite(x,y,z,outgrid);
+
+end

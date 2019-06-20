@@ -1,0 +1,16 @@
+<PAMDataset>
+  <SRS>PROJCS["unnamed",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433],AUTHORITY["EPSG","4326"]],PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",71],PARAMETER["central_meridian",-39],PARAMETER["scale_factor",1],PARAMETER["false_easting",0],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]]]</SRS>
+  <PAMRasterBand band="1">
+    <ColorInterp>Gray</ColorInterp>
+    <Metadata>
+      <MDI key="actual_range">{0.0006939310665086047,2371805.519757736}</MDI>
+      <MDI key="long_name">z</MDI>
+      <MDI key="NETCDF_VARNAME">z</MDI>
+      <MDI key="STATISTICS_MAXIMUM">10444.292062426</MDI>
+      <MDI key="STATISTICS_MEAN">18.337452938517</MDI>
+      <MDI key="STATISTICS_MINIMUM">0</MDI>
+      <MDI key="STATISTICS_STDDEV">138.64770445321</MDI>
+      <MDI key="_FillValue">-nan</MDI>
+    </Metadata>
+  </PAMRasterBand>
+</PAMDataset>

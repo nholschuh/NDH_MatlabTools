@@ -1,0 +1,669 @@
+<!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
+<qgis version="3.0.3-Girona" projectname="">
+  <title></title>
+  <autotransaction active="0"/>
+  <evaluateDefaultValues active="0"/>
+  <trust active="0"/>
+  <projectCrs>
+    <spatialrefsys>
+      <proj4>+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs</proj4>
+      <srsid>1371</srsid>
+      <srid>3413</srid>
+      <authid>EPSG:3413</authid>
+      <description>WGS 84 / NSIDC Sea Ice Polar Stereographic North</description>
+      <projectionacronym>stere</projectionacronym>
+      <ellipsoidacronym>WGS84</ellipsoidacronym>
+      <geographicflag>false</geographicflag>
+    </spatialrefsys>
+  </projectCrs>
+  <layer-tree-group>
+    <customproperties/>
+    <layer-tree-layer source="../velocities/2015_Composite/Greenland_speed_2015_39.nc" providerKey="gdal" checked="Qt::Checked" id="Greenland_speed_2015_39_4a401862_1863_4e6b_875f_957a2b64743e" name="Greenland_speed_2015_39" expanded="1">
+      <customproperties/>
+    </layer-tree-layer>
+    <layer-tree-layer source="../topographies/LoadableTopographies_Greenland/WV_Greenland_Surf_210m.nc" providerKey="gdal" checked="Qt::Checked" id="WV_Greenland_Surf_210m_aa27d6e9_43da_44d3_a378_1ff49c6f3ffb" name="WV_Greenland_Surf_210m" expanded="1">
+      <customproperties/>
+    </layer-tree-layer>
+    <layer-tree-layer source="../topographies/LoadableTopographies_Greenland/GreenlandBed_Bamber.nc" providerKey="gdal" checked="Qt::Unchecked" id="GreenlandBed_Bamber_5611b3e6_cb29_497d_8645_a924857be2ef" name="GreenlandBed_Bamber" expanded="1">
+      <customproperties/>
+    </layer-tree-layer>
+    <layer-tree-layer source="../../../../Satellite_Mosaics/Greenland_DISP/DISP63_grlnd.tif" providerKey="gdal" checked="Qt::Unchecked" id="DISP63_grlnd_fbe027b5_c93b_4bb6_bdf8_e14a8f5276ff" name="DISP63_grlnd" expanded="1">
+      <customproperties/>
+    </layer-tree-layer>
+    <layer-tree-layer source="../../../../Satellite_Mosaics/Greenland_MODIS/Greenland_400m.nc" providerKey="gdal" checked="Qt::Checked" id="Greenland_400m_f8027b4b_9db5_48ae_811a_4e8e8d9c2d19" name="Greenland_400m" expanded="1">
+      <customproperties/>
+    </layer-tree-layer>
+    <custom-order enabled="0">
+      <item>Greenland_400m_f8027b4b_9db5_48ae_811a_4e8e8d9c2d19</item>
+      <item>DISP63_grlnd_fbe027b5_c93b_4bb6_bdf8_e14a8f5276ff</item>
+      <item>GreenlandBed_Bamber_5611b3e6_cb29_497d_8645_a924857be2ef</item>
+      <item>WV_Greenland_Surf_210m_aa27d6e9_43da_44d3_a378_1ff49c6f3ffb</item>
+      <item>Greenland_speed_2015_39_4a401862_1863_4e6b_875f_957a2b64743e</item>
+    </custom-order>
+  </layer-tree-group>
+  <snapping-settings type="1" mode="2" tolerance="12" unit="1" intersection-snapping="0" enabled="0">
+    <individual-layer-settings/>
+  </snapping-settings>
+  <relations/>
+  <mapcanvas name="theMapCanvas" annotationsVisible="1">
+    <units>meters</units>
+    <extent>
+      <xmin>-712539.66003214637748897</xmin>
+      <ymin>-2661839.26155597995966673</ymin>
+      <xmax>1415750.47464020946063101</xmax>
+      <ymax>-806190.06767084752209485</ymax>
+    </extent>
+    <rotation>0</rotation>
+    <destinationsrs>
+      <spatialrefsys>
+        <proj4>+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs</proj4>
+        <srsid>1371</srsid>
+        <srid>3413</srid>
+        <authid>EPSG:3413</authid>
+        <description>WGS 84 / NSIDC Sea Ice Polar Stereographic North</description>
+        <projectionacronym>stere</projectionacronym>
+        <ellipsoidacronym>WGS84</ellipsoidacronym>
+        <geographicflag>false</geographicflag>
+      </spatialrefsys>
+    </destinationsrs>
+    <rendermaptile>0</rendermaptile>
+  </mapcanvas>
+  <legend updateDrawingOrder="true">
+    <legendlayer checked="Qt::Checked" drawingOrder="-1" showFeatureCount="0" open="true" name="Greenland_speed_2015_39">
+      <filegroup open="true" hidden="false">
+        <legendlayerfile isInOverview="0" visible="1" layerid="Greenland_speed_2015_39_4a401862_1863_4e6b_875f_957a2b64743e"/>
+      </filegroup>
+    </legendlayer>
+    <legendlayer checked="Qt::Checked" drawingOrder="-1" showFeatureCount="0" open="true" name="WV_Greenland_Surf_210m">
+      <filegroup open="true" hidden="false">
+        <legendlayerfile isInOverview="0" visible="1" layerid="WV_Greenland_Surf_210m_aa27d6e9_43da_44d3_a378_1ff49c6f3ffb"/>
+      </filegroup>
+    </legendlayer>
+    <legendlayer checked="Qt::Unchecked" drawingOrder="-1" showFeatureCount="0" open="true" name="GreenlandBed_Bamber">
+      <filegroup open="true" hidden="false">
+        <legendlayerfile isInOverview="0" visible="0" layerid="GreenlandBed_Bamber_5611b3e6_cb29_497d_8645_a924857be2ef"/>
+      </filegroup>
+    </legendlayer>
+    <legendlayer checked="Qt::Unchecked" drawingOrder="-1" showFeatureCount="0" open="true" name="DISP63_grlnd">
+      <filegroup open="true" hidden="false">
+        <legendlayerfile isInOverview="0" visible="0" layerid="DISP63_grlnd_fbe027b5_c93b_4bb6_bdf8_e14a8f5276ff"/>
+      </filegroup>
+    </legendlayer>
+    <legendlayer checked="Qt::Checked" drawingOrder="-1" showFeatureCount="0" open="true" name="Greenland_400m">
+      <filegroup open="true" hidden="false">
+        <legendlayerfile isInOverview="0" visible="1" layerid="Greenland_400m_f8027b4b_9db5_48ae_811a_4e8e8d9c2d19"/>
+      </filegroup>
+    </legendlayer>
+  </legend>
+  <mapViewDocks/>
+  <mapViewDocks3D/>
+  <mapcanvas name="mAreaCanvas" annotationsVisible="1">
+    <units>degrees</units>
+    <extent>
+      <xmin>0</xmin>
+      <ymin>0</ymin>
+      <xmax>0</xmax>
+      <ymax>0</ymax>
+    </extent>
+    <rotation>0</rotation>
+    <destinationsrs>
+      <spatialrefsys>
+        <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+        <srsid>3452</srsid>
+        <srid>4326</srid>
+        <authid>EPSG:4326</authid>
+        <description>WGS 84</description>
+        <projectionacronym>longlat</projectionacronym>
+        <ellipsoidacronym>WGS84</ellipsoidacronym>
+        <geographicflag>true</geographicflag>
+      </spatialrefsys>
+    </destinationsrs>
+    <rendermaptile>0</rendermaptile>
+  </mapcanvas>
+  <mapcanvas name="mAreaCanvas" annotationsVisible="1">
+    <units>degrees</units>
+    <extent>
+      <xmin>0</xmin>
+      <ymin>0</ymin>
+      <xmax>0</xmax>
+      <ymax>0</ymax>
+    </extent>
+    <rotation>0</rotation>
+    <destinationsrs>
+      <spatialrefsys>
+        <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+        <srsid>3452</srsid>
+        <srid>4326</srid>
+        <authid>EPSG:4326</authid>
+        <description>WGS 84</description>
+        <projectionacronym>longlat</projectionacronym>
+        <ellipsoidacronym>WGS84</ellipsoidacronym>
+        <geographicflag>true</geographicflag>
+      </spatialrefsys>
+    </destinationsrs>
+    <rendermaptile>0</rendermaptile>
+  </mapcanvas>
+  <mapcanvas name="mAreaCanvas" annotationsVisible="1">
+    <units>degrees</units>
+    <extent>
+      <xmin>0</xmin>
+      <ymin>0</ymin>
+      <xmax>0</xmax>
+      <ymax>0</ymax>
+    </extent>
+    <rotation>0</rotation>
+    <destinationsrs>
+      <spatialrefsys>
+        <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+        <srsid>3452</srsid>
+        <srid>4326</srid>
+        <authid>EPSG:4326</authid>
+        <description>WGS 84</description>
+        <projectionacronym>longlat</projectionacronym>
+        <ellipsoidacronym>WGS84</ellipsoidacronym>
+        <geographicflag>true</geographicflag>
+      </spatialrefsys>
+    </destinationsrs>
+    <rendermaptile>0</rendermaptile>
+  </mapcanvas>
+  <projectlayers>
+    <maplayer maxScale="0" type="raster" refreshOnNotifyEnabled="0" hasScaleBasedVisibilityFlag="0" refreshOnNotifyMessage="" autoRefreshTime="0" minScale="1e+8" autoRefreshEnabled="0">
+      <extent>
+        <xmin>-808564.4375</xmin>
+        <ymin>-3425489.43749999953433871</ymin>
+        <xmax>970635.56249999976716936</xmax>
+        <ymax>-644989.4375</ymax>
+      </extent>
+      <id>DISP63_grlnd_fbe027b5_c93b_4bb6_bdf8_e14a8f5276ff</id>
+      <datasource>../../../../Satellite_Mosaics/Greenland_DISP/DISP63_grlnd.tif</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>DISP63_grlnd</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=stere +lat_0=90 +lat_ts=70 +lon_0=315 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs</proj4>
+          <srsid>100000</srsid>
+          <srid>0</srid>
+          <authid>USER:100000</authid>
+          <description> * Generated CRS (+proj=stere +lat_0=90 +lat_ts=70 +lon_0=315 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs)</description>
+          <projectionacronym>stere</projectionacronym>
+          <ellipsoidacronym></ellipsoidacronym>
+          <geographicflag>false</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <resourceMetadata>
+        <identifier></identifier>
+        <parentidentifier></parentidentifier>
+        <language></language>
+        <type></type>
+        <title></title>
+        <abstract></abstract>
+        <fees></fees>
+        <encoding></encoding>
+        <crs>
+          <spatialrefsys>
+            <proj4></proj4>
+            <srsid>0</srsid>
+            <srid>0</srid>
+            <authid></authid>
+            <description></description>
+            <projectionacronym></projectionacronym>
+            <ellipsoidacronym></ellipsoidacronym>
+            <geographicflag>false</geographicflag>
+          </spatialrefsys>
+        </crs>
+        <extent/>
+        <links/>
+      </resourceMetadata>
+      <customproperties>
+        <property value="Value" key="identify/format"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList useSrcNoData="0" bandNo="1"/>
+      </noData>
+      <map-layer-style-manager current="default">
+        <map-layer-style name="default"/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer opacity="1" grayBand="1" gradient="BlackToWhite" type="singlebandgray" alphaBand="-1">
+          <rasterTransparency/>
+          <minMaxOrigin>
+            <limits>MinMax</limits>
+            <extent>WholeRaster</extent>
+            <statAccuracy>Estimated</statAccuracy>
+            <cumulativeCutLower>0.02</cumulativeCutLower>
+            <cumulativeCutUpper>0.98</cumulativeCutUpper>
+            <stdDevFactor>2</stdDevFactor>
+          </minMaxOrigin>
+          <contrastEnhancement>
+            <minValue>0</minValue>
+            <maxValue>255</maxValue>
+            <algorithm>StretchToMinimumMaximum</algorithm>
+          </contrastEnhancement>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation grayscaleMode="0" saturation="0" colorizeOn="0" colorizeRed="255" colorizeBlue="128" colorizeGreen="128" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer maxScale="0" type="raster" refreshOnNotifyEnabled="0" hasScaleBasedVisibilityFlag="0" refreshOnNotifyMessage="" autoRefreshTime="0" minScale="1e+8" autoRefreshEnabled="0">
+      <extent>
+        <xmin>-1237449.81575088109821081</xmin>
+        <ymin>-3606453.26607246929779649</ymin>
+        <xmax>1555168.73511007521301508</xmax>
+        <ymax>-370166.29138676245929673</ymax>
+      </extent>
+      <id>GreenlandBed_Bamber_5611b3e6_cb29_497d_8645_a924857be2ef</id>
+      <datasource>../topographies/LoadableTopographies_Greenland/GreenlandBed_Bamber.nc</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>GreenlandBed_Bamber</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs</proj4>
+          <srsid>1371</srsid>
+          <srid>3413</srid>
+          <authid>EPSG:3413</authid>
+          <description>WGS 84 / NSIDC Sea Ice Polar Stereographic North</description>
+          <projectionacronym>stere</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>false</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <resourceMetadata>
+        <identifier></identifier>
+        <parentidentifier></parentidentifier>
+        <language></language>
+        <type></type>
+        <title></title>
+        <abstract></abstract>
+        <fees></fees>
+        <encoding></encoding>
+        <crs>
+          <spatialrefsys>
+            <proj4></proj4>
+            <srsid>0</srsid>
+            <srid>0</srid>
+            <authid></authid>
+            <description></description>
+            <projectionacronym></projectionacronym>
+            <ellipsoidacronym></ellipsoidacronym>
+            <geographicflag>false</geographicflag>
+          </spatialrefsys>
+        </crs>
+        <extent/>
+        <links/>
+      </resourceMetadata>
+      <customproperties>
+        <property value="Value" key="identify/format"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList useSrcNoData="1" bandNo="1"/>
+      </noData>
+      <map-layer-style-manager current="default">
+        <map-layer-style name="default"/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer opacity="1" grayBand="1" gradient="BlackToWhite" type="singlebandgray" alphaBand="-1">
+          <rasterTransparency/>
+          <minMaxOrigin>
+            <limits>MinMax</limits>
+            <extent>WholeRaster</extent>
+            <statAccuracy>Estimated</statAccuracy>
+            <cumulativeCutLower>0.02</cumulativeCutLower>
+            <cumulativeCutUpper>0.98</cumulativeCutUpper>
+            <stdDevFactor>2</stdDevFactor>
+          </minMaxOrigin>
+          <contrastEnhancement>
+            <minValue>-9999</minValue>
+            <maxValue>2664.76220703125</maxValue>
+            <algorithm>StretchToMinimumMaximum</algorithm>
+          </contrastEnhancement>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation grayscaleMode="0" saturation="0" colorizeOn="0" colorizeRed="255" colorizeBlue="128" colorizeGreen="128" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer maxScale="0" type="raster" refreshOnNotifyEnabled="0" hasScaleBasedVisibilityFlag="0" refreshOnNotifyMessage="" autoRefreshTime="0" minScale="1e+8" autoRefreshEnabled="0">
+      <extent>
+        <xmin>-1491076.36714498605579138</xmin>
+        <ymin>-3618370.40156386140733957</ymin>
+        <xmax>1191273.13276082649827003</xmax>
+        <ymax>-381684.62380061770090833</ymax>
+      </extent>
+      <id>Greenland_400m_f8027b4b_9db5_48ae_811a_4e8e8d9c2d19</id>
+      <datasource>../../../../Satellite_Mosaics/Greenland_MODIS/Greenland_400m.nc</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>Greenland_400m</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs</proj4>
+          <srsid>1371</srsid>
+          <srid>3413</srid>
+          <authid>EPSG:3413</authid>
+          <description>WGS 84 / NSIDC Sea Ice Polar Stereographic North</description>
+          <projectionacronym>stere</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>false</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <resourceMetadata>
+        <identifier></identifier>
+        <parentidentifier></parentidentifier>
+        <language></language>
+        <type></type>
+        <title></title>
+        <abstract></abstract>
+        <fees></fees>
+        <encoding></encoding>
+        <crs>
+          <spatialrefsys>
+            <proj4></proj4>
+            <srsid>0</srsid>
+            <srid>0</srid>
+            <authid></authid>
+            <description></description>
+            <projectionacronym></projectionacronym>
+            <ellipsoidacronym></ellipsoidacronym>
+            <geographicflag>false</geographicflag>
+          </spatialrefsys>
+        </crs>
+        <extent/>
+        <links/>
+      </resourceMetadata>
+      <customproperties>
+        <property value="Value" key="identify/format"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList useSrcNoData="0" bandNo="1"/>
+      </noData>
+      <map-layer-style-manager current="default">
+        <map-layer-style name="default"/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer opacity="1" grayBand="1" gradient="BlackToWhite" type="singlebandgray" alphaBand="-1">
+          <rasterTransparency/>
+          <minMaxOrigin>
+            <limits>None</limits>
+            <extent>WholeRaster</extent>
+            <statAccuracy>Estimated</statAccuracy>
+            <cumulativeCutLower>0.02</cumulativeCutLower>
+            <cumulativeCutUpper>0.98</cumulativeCutUpper>
+            <stdDevFactor>2</stdDevFactor>
+          </minMaxOrigin>
+          <contrastEnhancement>
+            <minValue>10000</minValue>
+            <maxValue>18000</maxValue>
+            <algorithm>StretchToMinimumMaximum</algorithm>
+          </contrastEnhancement>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation grayscaleMode="0" saturation="0" colorizeOn="0" colorizeRed="255" colorizeBlue="128" colorizeGreen="128" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer maxScale="0" type="raster" refreshOnNotifyEnabled="0" hasScaleBasedVisibilityFlag="0" refreshOnNotifyMessage="" autoRefreshTime="0" minScale="1e+8" autoRefreshEnabled="0">
+      <extent>
+        <xmin>-996985.5922958281589672</xmin>
+        <ymin>-3452125.46837907424196601</ymin>
+        <xmax>790362.70074688259046525</xmax>
+        <ymax>-571004.27210231416393071</ymax>
+      </extent>
+      <id>Greenland_speed_2015_39_4a401862_1863_4e6b_875f_957a2b64743e</id>
+      <datasource>../velocities/2015_Composite/Greenland_speed_2015_39.nc</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>Greenland_speed_2015_39</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=stere +lat_0=90 +lat_ts=71 +lon_0=-39 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs</proj4>
+          <srsid>100001</srsid>
+          <srid>0</srid>
+          <authid>USER:100001</authid>
+          <description> * Generated CRS (+proj=stere +lat_0=90 +lat_ts=71 +lon_0=-39 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs)</description>
+          <projectionacronym>stere</projectionacronym>
+          <ellipsoidacronym></ellipsoidacronym>
+          <geographicflag>false</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <resourceMetadata>
+        <identifier></identifier>
+        <parentidentifier></parentidentifier>
+        <language></language>
+        <type></type>
+        <title></title>
+        <abstract></abstract>
+        <fees></fees>
+        <encoding></encoding>
+        <crs>
+          <spatialrefsys>
+            <proj4></proj4>
+            <srsid>0</srsid>
+            <srid>0</srid>
+            <authid></authid>
+            <description></description>
+            <projectionacronym></projectionacronym>
+            <ellipsoidacronym></ellipsoidacronym>
+            <geographicflag>false</geographicflag>
+          </spatialrefsys>
+        </crs>
+        <extent>
+          <spatial minx="0" miny="0" maxz="0" maxx="0" dimensions="2" minz="0" maxy="0" crs=""/>
+          <temporal>
+            <period>
+              <start></start>
+              <end></end>
+            </period>
+          </temporal>
+        </extent>
+        <contact>
+          <name></name>
+          <organization></organization>
+          <position></position>
+          <voice></voice>
+          <fax></fax>
+          <email></email>
+          <role></role>
+        </contact>
+        <links/>
+      </resourceMetadata>
+      <customproperties>
+        <property value="false" key="WMSBackgroundLayer"/>
+        <property value="false" key="WMSPublishDataSourceUrl"/>
+        <property value="0" key="embeddedWidgets/count"/>
+        <property value="Value" key="identify/format"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList useSrcNoData="0" bandNo="1"/>
+      </noData>
+      <map-layer-style-manager current="default">
+        <map-layer-style name="default"/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer opacity="0.2" band="1" type="singlebandpseudocolor" classificationMin="0" alphaBand="-1" classificationMax="100">
+          <rasterTransparency/>
+          <minMaxOrigin>
+            <limits>None</limits>
+            <extent>WholeRaster</extent>
+            <statAccuracy>Estimated</statAccuracy>
+            <cumulativeCutLower>0.02</cumulativeCutLower>
+            <cumulativeCutUpper>0.98</cumulativeCutUpper>
+            <stdDevFactor>2</stdDevFactor>
+          </minMaxOrigin>
+          <rastershader>
+            <colorrampshader colorRampType="INTERPOLATED" classificationMode="1" clip="0">
+              <colorramp type="gradient" name="[source]">
+                <prop k="color1" v="44,123,182,255"/>
+                <prop k="color2" v="215,25,28,255"/>
+                <prop k="discrete" v="0"/>
+                <prop k="rampType" v="gradient"/>
+                <prop k="stops" v="0.25;171,217,233,255:0.5;255,255,191,255:0.75;253,174,97,255"/>
+              </colorramp>
+              <item value="0" alpha="255" color="#2c7bb6" label="0"/>
+              <item value="25" alpha="255" color="#abd9e9" label="25"/>
+              <item value="50" alpha="255" color="#ffffbf" label="50"/>
+              <item value="75" alpha="255" color="#fdae61" label="75"/>
+              <item value="100" alpha="255" color="#d7191c" label="100"/>
+            </colorrampshader>
+          </rastershader>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation grayscaleMode="0" saturation="0" colorizeOn="0" colorizeRed="255" colorizeBlue="128" colorizeGreen="128" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+    <maplayer maxScale="0" type="raster" refreshOnNotifyEnabled="0" hasScaleBasedVisibilityFlag="0" refreshOnNotifyMessage="" autoRefreshTime="0" minScale="1e+8" autoRefreshEnabled="0">
+      <extent>
+        <xmin>-640090</xmin>
+        <ymin>-3355640</ymin>
+        <xmax>855740</xmax>
+        <ymax>-655460</ymax>
+      </extent>
+      <id>WV_Greenland_Surf_210m_aa27d6e9_43da_44d3_a378_1ff49c6f3ffb</id>
+      <datasource>../topographies/LoadableTopographies_Greenland/WV_Greenland_Surf_210m.nc</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>WV_Greenland_Surf_210m</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs</proj4>
+          <srsid>1371</srsid>
+          <srid>3413</srid>
+          <authid>EPSG:3413</authid>
+          <description>WGS 84 / NSIDC Sea Ice Polar Stereographic North</description>
+          <projectionacronym>stere</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>false</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <resourceMetadata>
+        <identifier></identifier>
+        <parentidentifier></parentidentifier>
+        <language></language>
+        <type></type>
+        <title></title>
+        <abstract></abstract>
+        <fees></fees>
+        <encoding></encoding>
+        <crs>
+          <spatialrefsys>
+            <proj4></proj4>
+            <srsid>0</srsid>
+            <srid>0</srid>
+            <authid></authid>
+            <description></description>
+            <projectionacronym></projectionacronym>
+            <ellipsoidacronym></ellipsoidacronym>
+            <geographicflag>false</geographicflag>
+          </spatialrefsys>
+        </crs>
+        <extent>
+          <spatial minx="0" miny="0" maxz="0" maxx="0" dimensions="2" minz="0" maxy="0" crs=""/>
+          <temporal>
+            <period>
+              <start></start>
+              <end></end>
+            </period>
+          </temporal>
+        </extent>
+        <contact>
+          <name></name>
+          <organization></organization>
+          <position></position>
+          <voice></voice>
+          <fax></fax>
+          <email></email>
+          <role></role>
+        </contact>
+        <links/>
+      </resourceMetadata>
+      <customproperties>
+        <property value="false" key="WMSBackgroundLayer"/>
+        <property value="false" key="WMSPublishDataSourceUrl"/>
+        <property value="0" key="embeddedWidgets/count"/>
+        <property value="Value" key="identify/format"/>
+      </customproperties>
+      <provider>gdal</provider>
+      <noData>
+        <noDataList useSrcNoData="1" bandNo="1"/>
+      </noData>
+      <map-layer-style-manager current="default">
+        <map-layer-style name="default"/>
+      </map-layer-style-manager>
+      <pipe>
+        <rasterrenderer opacity="0.5" band="1" type="hillshade" angle="45" zfactor="20" azimuth="315" alphaBand="-1" multidirection="0">
+          <rasterTransparency/>
+          <minMaxOrigin>
+            <limits>None</limits>
+            <extent>WholeRaster</extent>
+            <statAccuracy>Estimated</statAccuracy>
+            <cumulativeCutLower>0.02</cumulativeCutLower>
+            <cumulativeCutUpper>0.98</cumulativeCutUpper>
+            <stdDevFactor>2</stdDevFactor>
+          </minMaxOrigin>
+        </rasterrenderer>
+        <brightnesscontrast brightness="0" contrast="0"/>
+        <huesaturation grayscaleMode="0" saturation="0" colorizeOn="0" colorizeRed="255" colorizeBlue="128" colorizeGreen="128" colorizeStrength="100"/>
+        <rasterresampler maxOversampling="2"/>
+      </pipe>
+      <blendMode>0</blendMode>
+    </maplayer>
+  </projectlayers>
+  <layerorder>
+    <layer id="Greenland_400m_f8027b4b_9db5_48ae_811a_4e8e8d9c2d19"/>
+    <layer id="DISP63_grlnd_fbe027b5_c93b_4bb6_bdf8_e14a8f5276ff"/>
+    <layer id="GreenlandBed_Bamber_5611b3e6_cb29_497d_8645_a924857be2ef"/>
+    <layer id="WV_Greenland_Surf_210m_aa27d6e9_43da_44d3_a378_1ff49c6f3ffb"/>
+    <layer id="Greenland_speed_2015_39_4a401862_1863_4e6b_875f_957a2b64743e"/>
+  </layerorder>
+  <properties>
+    <PositionPrecision>
+      <DecimalPlaces type="int">2</DecimalPlaces>
+      <Automatic type="bool">true</Automatic>
+    </PositionPrecision>
+    <Paths>
+      <Absolute type="bool">false</Absolute>
+    </Paths>
+    <SpatialRefSys>
+      <ProjectionsEnabled type="int">1</ProjectionsEnabled>
+    </SpatialRefSys>
+    <Gui>
+      <SelectionColorRedPart type="int">255</SelectionColorRedPart>
+      <CanvasColorRedPart type="int">255</CanvasColorRedPart>
+      <SelectionColorGreenPart type="int">255</SelectionColorGreenPart>
+      <SelectionColorAlphaPart type="int">255</SelectionColorAlphaPart>
+      <SelectionColorBluePart type="int">0</SelectionColorBluePart>
+      <CanvasColorBluePart type="int">255</CanvasColorBluePart>
+      <CanvasColorGreenPart type="int">255</CanvasColorGreenPart>
+    </Gui>
+    <Measurement>
+      <AreaUnits type="QString"></AreaUnits>
+      <DistanceUnits type="QString"></DistanceUnits>
+    </Measurement>
+    <Legend>
+      <filterByMap type="bool">false</filterByMap>
+    </Legend>
+    <Measure>
+      <Ellipsoid type="QString">WGS84</Ellipsoid>
+    </Measure>
+  </properties>
+  <visibility-presets/>
+  <transformContext/>
+  <Annotations/>
+  <Layouts/>
+</qgis>
