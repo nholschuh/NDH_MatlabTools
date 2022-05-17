@@ -20,7 +20,7 @@ function [true_midpoint_z true_p true_L_point transmit_angle reflect_angle true_
 % true_midpoint_z - depth to a target imaged given the travel time and
 %                   position information
 % true_p - the ray parameter for the given target
-% true_L - this value, when divided from the return power (or
+% true_L_point - this value, when divided from the return power (or
 %       subtracted, in dB) corrects the data for spherical spreading
 % transmit_angle - the outgoing angle for the ray from the radar
 % reflect_angle - the incidence angle for the ray as it approaches the
@@ -41,13 +41,21 @@ function [true_midpoint_z true_p true_L_point transmit_angle reflect_angle true_
 
 %%%%%%%%%%%%%%%%%% PreSet some Accumulation and Temperature for different
 %%%%%%%%%%%%%%%%%% regions
-if 0 %% Crary Ice Rise
+if 1 %% Crary Ice Rise
     A = 0.1;
-    T = -2+273.5;    
-elseif 1
+    T = -2+273.5;
+    if exist('surf_rho') == 0
+        surf_rho = 550;
+    end
+else
     A = 0.3;
     T = -5+273.5;
+    if exist('surf_rho') == 0
+        surf_rho = 550;
+    end
 end
+
+surf_rho = 917;
     
 
 if exist('timerflag') == 0
@@ -93,6 +101,9 @@ domain_z = round(srcz - 50):1:round(max_depth+40);
         domain_V(:) = cice;
         domain_V(find(domain_z < 0)) = cice;
     end
+    
+    domain_V = real(domain_V);
+    
 disp(['Step 1 - Initialize the Domain: ',num2str(round(toc)),'s'])
 disp(['Step 2 - Begin Ray Tracing:'])
     
@@ -110,12 +121,27 @@ for i = 1:length(zd)
     %(6) - Source Receiver offset
 
     L_final_plane(i,:) = 1./(4*pi*(L_temp).^2); %%% Convert to effective spherical radius
-    t_final(i,:) = t_temp;
+    t_final(i,:) = real(t_temp);
     p_final(i,:) = p_temp;   
     
-    [t_temp1,p_temp1,L_temp1,raycoord1]=traceray(domain_V,domain_z,domain_V,domain_z,[srcz 1;zd(i) 1],offsets/2,10,-1,20,1,0,0);
-    [t_temp2,p_temp2,L_temp2,raycoord2]=traceray(domain_V,domain_z,domain_V,domain_z,[srcz 1;zd(i) 1],offsets/2,10,-1,20,1,0,0);
+    [t_temp1,p_temp1,L_temp1,raycoord1]=traceray(domain_V,domain_z,domain_V,domain_z,[srcz 1;zd(i) 1],offsets/2,5,-1,20,1,0,0);
+    [t_temp2,p_temp2,L_temp2,raycoord2]=traceray(domain_V,domain_z,domain_V,domain_z,[zd(i) 1;srcz 1],offsets/2,5,-1,20,1,0,0);
 
+    if 0 %%%%%%%%%%%%%% This section is for debugging
+        hold off
+        for jjj = 1:3:length(raycoord1);
+        
+        plot(raycoord1{jjj}(:,1),raycoord1{jjj}(:,2),'Color','black','LineWidth',1.5)
+        hold all
+        plot(raycoord2{jjj}(:,1)+offsets(jjj)/2,raycoord2{jjj}(:,2),'Color','black','LineWidth',1.5)
+        plot(raycoord{jjj}(:,1),raycoord{jjj}(:,2),':','Color','blue')
+        end
+        set(gca,'YDir','reverse')
+        ylim([0 max(zd)])
+        pause(0.1)
+        
+    end
+    
     L_final_point(i,:) = (1./(4*pi*(L_temp1).^2)).*(1./(4*pi*(L_temp2).^2)); %%% Convert to effective spherical radius    
     
     if mod(i,ceil(length(zd)/10)) == 0 & timerflag == 1
@@ -123,11 +149,22 @@ for i = 1:length(zd)
     end
 end
 
+if 0
+    close all
+    plot(L_final_plane(:,1).^0.5,L_final_point(:,1).^0.25)
+end
 
 %%%%%% Interpolate back to travel_time;
 for i = 1:length(offsets)  
     %%%% Can only interpolate for points without infinite travel time
-    interp_inds = find(t_final(:,i) ~= Inf);
+    infinds = find(t_final(:,i) == Inf);
+    if length(infinds) == 0
+        si = 1;
+    else
+        si = max(infinds)+1;
+    end
+    interp_inds = si:length(t_final(:,1));
+    
     %%%% find midpointz for travel times as a function of offset
     true_midpoint_z(:,i) = interp1(t_final(interp_inds,i),zd(interp_inds),travel_time);
     true_p(:,i) = interp1(t_final(interp_inds,i),p_final(interp_inds,i),travel_time);

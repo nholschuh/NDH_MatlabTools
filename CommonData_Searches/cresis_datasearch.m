@@ -63,36 +63,52 @@ end
 
 %%%%%%%%%% Here we test several drive possibilities
 
-if exist('F:\Graduate_Work\Data\CReSIS_Bulk_Download\') == 7
-    drive_letter = 'F:\';
+if exist('F:/Graduate_Work/Data/CReSIS_Bulk_Download/') == 7
+    drive_letter = 'F:/';
 end
-if exist('D:\Graduate_Work\Data\CReSIS_Bulk_Download\') == 7
-    drive_letter = 'D:\';
+if exist('D:/Graduate_Work/Data/CReSIS_Bulk_Download/') == 7
+    drive_letter = 'D:/';
 end
-if exist('E:\Graduate_Work\Data\CReSIS_Bulk_Download\') == 7
-    drive_letter = 'E:\';
+if exist('E:/Graduate_Work/Data/CReSIS_Bulk_Download/') == 7
+    drive_letter = 'E:/';
 end
-if exist('G:\Graduate_Work\Data\CReSIS_Bulk_Download\') == 7
-    drive_letter = 'G:\';
+if exist('G:/Graduate_Work/Data/CReSIS_Bulk_Download/') == 7
+    drive_letter = 'G:/';
+end
+if exist('/mnt/data01/Data/RadarData/') == 7
+    drive_letter = '';
+    path_modify = '/mnt/data01/Data/RadarData/';
 end
 
 %%%%%%%%%% Here we load in the data if the right file was found
-if exist(drive_letter) == 0
+if exist('drive_letter') == 0
     disp(['The requisite drive is not found - check the path and retry'])
 else
     
     
     
     if ant0_or_gre1 == 0
-        load([OnePath,'Matlab_Code\NDH_Tools\CommonData_Searches\CReSIS_Data\Antarctica\CReSIS_Sectors_forDataSearch_Ant.mat'])
+        %%%%%%%%%%%%% These are made by the "Write_SectorFiles" script on
+        %%%%%%%%%%%%% the external drive. First you bulk aggregate, then
+        %%%%%%%%%%%%% write sectorfiles, then copy this into the
+        %%%%%%%%%%%%% commondatasearches folder
+        load([OnePath,'Matlab_Code/NDH_Tools/CommonData_Searches/CReSIS_Data/Antarctica/CReSIS_Sectors_forDataSearch_Ant.mat'])
     else
-        load([OnePath,'Matlab_Code\NDH_Tools\CommonData_Searches\CReSIS_Data\Greenland\CReSIS_Sectors_forDataSearch_Gre.mat'])
+        load([OnePath,'Matlab_Code/NDH_Tools/CommonData_Searches/CReSIS_Data/Greenland/CReSIS_Sectors_forDataSearch_Gre.mat'])
     end
     
     %%%% Here we correct for a different mount point, just in case
     if str_contain(filename{1,2},drive_letter) == 0
-        for i = 1:length(filename)
-            filename{i,2}(1:3) = drive_letter;
+        if exist('path_modify') == 1
+            for i = 1:length(filename)
+                filename{i,2} = [path_modify,filename{i,2}(44:end)];
+                rep_inds = find(filename{i,2} == '\');
+                filename{i,2}(rep_inds) = '/';
+            end
+        else
+            for i = 1:length(filename)
+                filename{i,2}(1:3) = drive_letter;
+            end
         end
     end
     
@@ -129,7 +145,7 @@ else
             ol = location_input;
         end
         xy = combvec(sector_x,sector_y)';
-        sector_list = matrix_to_vector(sector_inds');
+        sector_list = matrix_to_vector(sector_inds);
         chosen_sectors = sector_list(find(within(xy(:,1),xy(:,2),ol(:,1),ol(:,2))));
         
     elseif point0_outline1_grid2 == 2 %%%% the grid option

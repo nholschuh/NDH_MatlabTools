@@ -12,7 +12,7 @@ function add_substrate(filename,icethickness,material)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 
-freespace_thickness = 15;
+freespace_thickness = 50;%
 
 if length(material) == 1
     if material == 1  % Seawater

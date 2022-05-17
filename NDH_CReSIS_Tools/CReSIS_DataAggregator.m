@@ -117,7 +117,9 @@ for i = 1:length(files_list)
     else
         filenames{i} = [files_list(i).name];
     end
+    clearvars DataElevation GPS_time Heading Latitude Longitude Pitch Roll Surface Bottom Time file_version param* 
     load(filenames{i});
+    disp(filenames{i});
     
     
     
@@ -154,12 +156,16 @@ for i = 1:length(files_list)
     end
     
     if exist('Surface') == 1
+        if exist('Bottom') == 0
+            Bottom = Surface;
+        end
         if exist('if_depth_surface') == 0
             if max(Surface) < 1
                 surface_index = time2index(Surface,Time);
             else
                 surface_index = Surface;
             end
+            
             if max(Bottom) < 1
                 bed_index = time2index(Bottom,Time);
             else
@@ -169,12 +175,19 @@ for i = 1:length(files_list)
             surface_index = time2index(Surface,Depth);
             bed_index = time2index(Bottom,Depth);
         end
-        [bed_elev surface_elev] = pickelevation(Elevation,surface_index,bed_index,Time);
+        if max(bed_index == Inf) == 1
+            bed_index = zeros(size(Elevation))*NaN;
+            bed_elev = zeros(size(Elevation))'*NaN;
+            surface_index = zeros(size(Elevation))*NaN;
+            surface_elev = zeros(size(Elevation))'*NaN;
+        else
+            [bed_elev surface_elev] = pickelevation(Elevation,surface_index,bed_index,Time);
+        end
     else
-        bed_index = zeros(size(elevation))*Nan;
-        bed_elev = zeros(size(elevation))'*Nan;
-        surface_index = zeros(size(elevation))*Nan;
-        surface_elev = zeros(size(elevation))'*Nan;
+        bed_index = zeros(size(elevation))*NaN;
+        bed_elev = zeros(size(elevation))'*NaN;
+        surface_index = zeros(size(elevation))*NaN;
+        surface_elev = zeros(size(elevation))'*NaN;
     end
     
     [x y] = polarstereo_fwd(Latitude,Longitude);
@@ -199,7 +212,7 @@ for i = 1:length(files_list)
     year = ones(size(bed_elev))*eval(file_info{k}(1:4));
 
     
-    Data_Vals = [Data_Vals; [x' y' Latitude' Longitude' Elevation' surface_index' surface_elev bed_index' bed_elev [1:length(x)]' subline_index line_index day month year]];
+    Data_Vals = [Data_Vals; [x' y' Latitude' Longitude' Elevation' surface_index' surface_elev bed_index' bed_elev [1:length(x)]' subline_index line_index day month year GPS_time']];
     filename_ymd{i,1} = [subline_index(1) line_index(1) day(1) month(1) year(1)]; 
     filename_ymd{i,2} = [currentdirectory,'\',filenames{i}];
     start_indecies = [start_indecies start_indecies(i)+length(Data(1,:))];
@@ -207,7 +220,7 @@ end
 
 %start_indecies = start_indecies(1:(length(start_indecies)-1));
 
-DV_info = {'x_coord','y_coord','latitude','longitude','flight_elevation','surface_pick','surface_elevation','bed_pick','bed_elevation','trace_id','segment','flightline','day','month','year'};
+DV_info = {'x_coord','y_coord','latitude','longitude','flight_elevation','surface_pick','surface_elevation','bed_pick','bed_elevation','trace_id','segment','flightline','day','month','year','GPS_Time'};
 
 if prefix == 0
     savestring = ['save ',savename,'_Aggregated.mat AggregatedData Data_Vals DV_info start_indecies Time filename_ymd'];

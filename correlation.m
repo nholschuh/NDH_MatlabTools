@@ -74,8 +74,8 @@ xaxis = min([0 -final_xmax]):dx:final_xmax;
 overlap1 = find_overlap(xaxis,xaxis1);
 overlap2 = find_overlap(xaxis,xaxis2);
 
-if length(overlap2(1):overlap2(2)) ~= length(series2)
-    overlap2(2) = overlap2(2)+1;
+if length(overlap2) ~= length(series2)
+    overlap2 = overlap2(2)+1;
 end
 
 series1_temp = zeros(1,length(xaxis));
@@ -106,16 +106,13 @@ end
 
 
 
-if plotter == 2;
-    mov(1:length(zero_lag_index:length(lags))) = struct('cdata', [],...
-        'colormap', []);
-end
 
 if plotter >= 1;
     figure()
+   
     
     corr_max = max(abs(correlation_vec));
-    vec_for_sum_max = max(max(abs(vec_for_sum)));
+    %vec_for_sum_max = max(max(abs(vec_for_sum)));
     
     optimal_lag_index = find(max(correlation_vec) == correlation_vec);
     zero_lag_index = find(0 == lags);
@@ -129,19 +126,19 @@ if plotter >= 1;
 
         subplot(2,1,1)
         hold off
-        plot(xaxis,vec2,'o','Color','black','LineWidth',2,'Color','black')
+        plot(xaxis,vec2,'o-','Color','black','LineWidth',2,'Color','black')
         hold all
-        plot(xaxis,vec1,'o','MarkerFaceColor','red')
-        ylim([min([series1 series2])-2 max([series1 series2])+2])
+        plot(xaxis,vec1,'o-','MarkerFaceColor','red')
+        ylim(real([min([series1 series2])-2 max([series1 series2])+2]))
         xlim([min(xaxis) max(xaxis)])
         
         subplot(2,1,2)
         hold off
         plot([0 0],[-corr_max corr_max],':','Color','black')
         hold all
-        plot(xaxis,series1_orig,'.','Color','red')
+        %plot(xaxis,series1_orig,'.','Color','red')
         plot(lags(1:i),correlation_vec(1:i),'Color','black','LineWidth',2)
-        plot(lags(i),correlation_vec(i),'o','Color','black','MarkerFaceColor','black')
+        plot(lags(i),correlation_vec(i),'o-','Color','black','MarkerFaceColor','black')
         
         if i >= optimal_lag_index
             %plot(lags(optimal_lag_index),correlation_vec(optimal_lag_index),'ro','MarkerFaceColor','red');
@@ -153,15 +150,18 @@ if plotter >= 1;
         %ylabel('Correlation Value')
         ylabel('(f \ast g)')
         
+        set(gcf,'Color','white')
         pause(pause_time)
-        mov(i) = getframe(gcf);
+        if plotter == 2
+            generate_frames('CorrExample','CorrExample',i);
+        end
         
     end
 end
 
 
 if plotter == 2
-    movie2avi(mov,[date,'-corr.avi'], 'compression', 'None');
+    animate_frames('CorrExample','CorrExample',100,0,zero_lag_index,length(lags));
 end
 
 result = correlation_vec;

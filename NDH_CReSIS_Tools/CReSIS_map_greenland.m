@@ -45,7 +45,8 @@ if exist('source_flight') == 0 || max(source_flight == 0) == 1
         '2014_P3',...
         '2015_LC130',...
         '2015_Polar6',...
-        '2016_G1XB'};
+        '2016_G1XB',...
+        '2018_P3'};
 
     flight_selection = listdlg('ListString',flight_names,'PromptString','Select the Flight Year');
     source_flight = flight_names{flight_selection};
@@ -139,6 +140,15 @@ maxx = max(Data_Vals2(:,1))+1e5;
 miny = min(Data_Vals2(:,2))-1e5;
 maxy = max(Data_Vals2(:,2))+1e5;
 
+%%%%%%%%% This was added to force full greenland imagery
+% xs = [-810450 964265];
+% ys = [-3359648 -606834];
+% minx = xs(1);
+% maxx = xs(2);
+% miny = ys(1);
+% maxy = ys(2);
+
+
     skipper = 50;
     
     divs = G_Divides(10,0,0);
@@ -224,15 +234,17 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Writing out of the file
 subplot(8,1,1:7)
-        xs = [min(Data_Vals2(:,1))-1e5 max(Data_Vals2(:,1))+1e5];
-        ys = [min(Data_Vals2(:,2))-1e5 max(Data_Vals2(:,2))+1e5];
-        title(true_name(output_name))
-        xlim(xs)
-        ylim(ys)
-        NDH_Style()
-        location_map(xs(1),xs(2),ys(1),ys(2),1,0,1,0.5)
+if exist('xs') == 0
+    xs = [min(Data_Vals2(:,1))-1e5 max(Data_Vals2(:,1))+1e5];
+    ys = [min(Data_Vals2(:,2))-1e5 max(Data_Vals2(:,2))+1e5];
+end
+title(true_name(output_name))
+xlim(xs)
+ylim(ys)
+NDH_Style()
+location_map(xs(1),xs(2),ys(1),ys(2),1,0,1,0.5)
 pause(1)
-pdf_ndh(output_name,0,1)
+pdf_ndh(output_name,0,1,1)
 
 
 

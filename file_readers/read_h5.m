@@ -1,4 +1,4 @@
-function [output]=read_h5(h5_file)
+function [output]=read_h5(h5_file,keep_vars)
 % (C) Nick Holschuh - University of Washington - 2017 (Holschuh@uw.edu)
 % This function reads in the IceSAT .h5 file produced through the NASA SDC
 % system, using the land ice algorithm produced by Ben Smith
@@ -6,6 +6,7 @@ function [output]=read_h5(h5_file)
 %%%%%% Inputs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % h5_file - string containing either the local or full paht the ATL06 file
+% keep_vars - cell array of names to load in
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% Outputs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -16,11 +17,29 @@ function [output]=read_h5(h5_file)
 %%
 
 
+if exist('keep_vars') == 1
+    name_comp = 1;
+else
+    name_comp = 0;
+    keep_vars = {};
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% Note: For files that use the LZF filter, it must be downloaded,
+%%%%%%% compiled, and the Windows environment variable HDF5_PLUGIN_PATH must
+%%%%%%% be set to the compilation directory. This required me to compile a
+%%%%%%% dll in visual studio and registere the filter using 
+
 I=h5info(h5_file,'/');
 
     for i = 1:length(I.Datasets)
         wrt_str = ['output.',remove_illegalcharacters(I.Datasets(i).Name),' = h5read(h5_file,[''/',I.Datasets(i).Name,''']);'];
-        eval(wrt_str)        
+        eval(wrt_str)
+        
+        for ll = 1:length(I.Datasets(i).Attributes)
+            wrt_str = ['output.',remove_illegalcharacters(I.Datasets(i).Attributes(ll).Name),' = I.Datasets(i).Attributes(ll).Value;'];
+            eval(wrt_str)
+        end
     end
 
 %%%%%%%%%%%%%%% This extracts the attributs of the hd5 file itself, and
@@ -48,24 +67,41 @@ for i = 1:length(I.Groups)
     %%%%% Loop through the attributes and save them into the meta
     %%%%% substructure
     for j = 1:length(I.Groups(i).Attributes)
-        wrt_str = ['output',rn3,'Meta.',remove_illegalcharacters(I.Groups(i).Attributes(j).Name),' = I.Groups(i).Attributes(j).Value;'];
+        wrt_str = ['output',rn3,'Meta.',I.Groups(i).Attributes(j).Name,' = I.Groups(i).Attributes(j).Value;'];
         eval(wrt_str)
     end
     
+    
+    %%%%%%%%%%%%%%%%% Here we either read all the data or just the
+    %%%%%%%%%%%%%%%%% subsetted data:
+    
     %%%%% Loop through the datasets for this group
     for j = 1:length(I.Groups(i).Datasets)
-        wrt_str = ['output',rn3,remove_illegalcharacters(I.Groups(i).Datasets(j).Name),' = h5read(h5_file,[''',rn,''',''/'',''',I.Groups(i).Datasets(j).Name,''']);'];
-        eval(wrt_str)        
+        vardims = I.Groups(i).Datasets(j).Dataspace.Size;
+        varname = I.Groups(i).Datasets(j).Name;
+        if name_comp == 0 | strcmp_ndh(keep_vars,varname) == 1
+            
+            wrt_str = ['output',rn3,varname,' = h5read(h5_file,[''',rn,''',''/'',''',varname,''']);'];
+            eval(wrt_str)
+            
+        end
     end
     
- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%% Loop into the subgroups
     for j = 1:length(I.Groups(i).Groups)
         %%%%% Get the new naming structure
         rn = I.Groups(i).Groups(j).Name;
         rn2 = strsplit(rn,'/');
         rn_str = ['rn3 = strcat('];
-        for k = 1:length(rn2)
+        for k = 1:length(rn2) %%%%%%% This deals with h5 named structures that are numbers (check with ben?)
+            if length(rn2{k}) > 0
+                if ~isnan(str2double(rn2{k}(1))) | rn2{k}(1) == '-'
+                    rn2{k} = ['coord_',rn2{k}];
+                end
+            end
+            rn2{k}(find(rn2{k} == '-')) = 'n';
             rn_str = [rn_str,'''',rn2{k},''',''.'','];
         end
         rn_str = [rn_str(1:end-1),');'];
@@ -80,14 +116,21 @@ for i = 1:length(I.Groups)
         
         %%%%% Loop through the datasets for this group
         for k = 1:length(I.Groups(i).Groups(j).Datasets)
-            wrt_str = ['output',rn3,I.Groups(i).Groups(j).Datasets(k).Name,' = h5read(h5_file,[''',rn,''',''/'',''',I.Groups(i).Groups(j).Datasets(k).Name,''']);'];
-            eval(wrt_str)
+            vardims = I.Groups(i).Groups(j).Datasets(k).Dataspace.Size;
+            varname = I.Groups(i).Groups(j).Datasets(k).Name;
+            if name_comp == 0 | strcmp_ndh(keep_vars,varname) == 1
+                
+                wrt_str = ['output',rn3,varname,' = h5read(h5_file,[''',rn,''',''/'',''',varname,''']);'];
+                eval(wrt_str)
+                
+            end
         end
         
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%% Loop into the subgroups one more time
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%% Loop into the subgroups one more time
         for k = 1:length(I.Groups(i).Groups(j).Groups)
-            %%%%% Get the new naming structure
+            %%%% Get the new naming structure
             rn = I.Groups(i).Groups(j).Groups(k).Name;
             rn2 = strsplit(rn,'/');
             rn_str = ['rn3 = strcat('];
@@ -97,8 +140,8 @@ for i = 1:length(I.Groups)
             rn_str = [rn_str(1:end-1),');'];
             eval(rn_str);
             
-            %%%%% Loop through the attributes and save them into the meta
-            %%%%% substructure
+            %%%% Loop through the attributes and save them into the meta
+            %%%% substructure
             for l = 1:length(I.Groups(i).Groups(j).Groups(k).Attributes)
                 if max(rn3 == '-') == 1
                     rn3(find(rn3 == '-')) = [];
@@ -107,16 +150,29 @@ for i = 1:length(I.Groups)
                 eval(wrt_str)
             end
             
+            
             %%%%% Loop through the datasets for this group
-            for l = 1:length(I.Groups(i).Groups(j).Groups(k).Datasets)
-                wrt_str = ['output',rn3,remove_illegalcharacters(I.Groups(i).Groups(j).Groups(k).Datasets(l).Name),' = h5read(h5_file,[''',rn,''',''/'',''',I.Groups(i).Groups(j).Groups(k).Datasets(l).Name,''']);'];
-                eval(wrt_str)
+            for kk = 1:length(I.Groups(i).Groups(j).Groups(k).Datasets)
+                vardims = I.Groups(i).Groups(j).Groups(k).Datasets(kk).Dataspace.Size;
+                varname = I.Groups(i).Groups(j).Groups(k).Datasets(kk).Name;
+                if name_comp == 0 | strcmp_ndh(keep_vars,varname) == 1
+                    
+                    
+                    wrt_str = ['output',rn3,varname,' = h5read(h5_file,[''',rn,''',''/'',''',varname,''']);'];
+                    eval(wrt_str)
+                    
+                end
             end
             
         end
         
     end
+    
+    
+    
+    
 end
+
     
     
     

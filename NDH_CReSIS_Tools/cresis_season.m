@@ -24,7 +24,7 @@ if isstr(y) == 1
     y = eval(y(6:9));
 end
 
-
+%%
 %%%%%%%%%%%%%%%%% This is the initial step, required to be run once to
 %%%%%%%%%%%%%%%%% compile the season info
 compile_seasoninfo = 0;
@@ -34,15 +34,18 @@ if compile_seasoninfo == 1
     %%%%%%%%%%%%% Aggregate the Antarctica Dates
     a_dates = [];
     
-    cd('E:\Graduate_Work\Data\CReSIS_Bulk_Download\Antarctica')
+    cd('F:\Graduate_Work\Data\CReSIS_Bulk_Download\Antarctica')
     
     a_names = folders();
-    a_names = a_names(1:end-1);
+    a_names = a_names(1:end);
     
     files = dir('2*.mat');
     
     
     for i = 1:length(files);
+        if i == 16
+            keyboard
+        end
         load(files(i).name);
         dates{i} = datenum(Data_Vals2(:,15),Data_Vals2(:,14),Data_Vals2(:,13));
         dates{i} = remove_duplicates(dates{i});
@@ -61,7 +64,7 @@ if compile_seasoninfo == 1
      %%%%%%%%%%%%% Aggregate the Greenland Dates
     g_dates = [];
     
-    cd('E:\Graduate_Work\Data\CReSIS_Bulk_Download\Greenland')
+    cd('F:\Graduate_Work\Data\CReSIS_Bulk_Download\Greenland')
     
     g_names = folders();
     g_names([19 26]) = [];
@@ -86,14 +89,14 @@ if compile_seasoninfo == 1
 %         hold all
 %     end   
     
-    clearvars -except a_dates g_dates a_names g_names
+    clearvars -except a_dates g_dates a_names g_names y m d
     
     save([OnePath,'Matlab_Code\NDH_Tools\NDH_CReSIS_Tools\season_metadata.mat'],'a_dates','g_dates','a_names','g_names')
     end
 else
     load season_metadata.mat
 end
-
+%%
 searchdate = datenum(y,m,d);
 
 full_dates = [a_dates ones(size(a_dates(:,1))); g_dates ones(size(g_dates(:,1)))*2];

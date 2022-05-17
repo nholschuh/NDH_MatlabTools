@@ -8,46 +8,46 @@ sourcef_name = [file_parse{1}];
 for i = 2:length(file_parse)-2
     sourcef_name = [sourcef_name,'/',file_parse{1}];
 end
-sourcef_name = [sourcef_name,'/',file_parse{end-1}(1:end-7),'.in'];
+sourcef_name = [sourcef_name,'/',file_parse{end-1}(1:end-6),'.in'];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% This section reads meta information
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% directly from the model input file
 fid=fopen(sourcef_name,'r');
 if fid ~= -1
-break_flag = 0;
-counter = 1;
-while break_flag == 0
-    line = fgetl(fid);
-    if str_contain(line,'hertzian_dipole') == 1
-        vals = strsplit(line,' ');
-        if vals{2} == 'x';
-            polarization = 1;
-        elseif vals{2} == 'y';
-            polarization = 2;
-        elseif vals{2} == 'z';
-            polarization = 3;
+    break_flag = 0;
+    counter = 1;
+    while break_flag == 0
+        line = fgetl(fid);
+        if str_contain(line,'hertzian_dipole') == 1
+            vals = strsplit(line,' ');
+            if vals{2} == 'x';
+                polarization = 1;
+            elseif vals{2} == 'y';
+                polarization = 2;
+            elseif vals{2} == 'z';
+                polarization = 3;
+            end
+            s_pos = [eval(vals{3}) eval(vals{4}) eval(vals{5})];
+        elseif line == -1
+            break_flag = 1;
         end
-        s_pos = [eval(vals{3}) eval(vals{4}) eval(vals{5})];
-    elseif line == -1
-       break_flag = 1; 
     end
-end
-fseek(fid,0,'bof');
-break_flag = 0;
-counter = 1;
-while break_flag == 0
-    line = fgetl(fid);
-    if str_contain(line,'domain') == 1
-        vals = strsplit(line,' ');
-        domain_size = [eval(vals{2}) eval(vals{3}) eval(vals{4})];
-        break_flag = 1;
+    fseek(fid,0,'bof');
+    break_flag = 0;
+    counter = 1;
+    while break_flag == 0
+        line = fgetl(fid);
+        if str_contain(line,'domain') == 1
+            vals = strsplit(line,' ');
+            domain_size = [eval(vals{2}) eval(vals{3}) eval(vals{4})];
+            break_flag = 1;
+        end
     end
-end
-fclose(fid);
+    fclose(fid);
 else
-   polarization = 0;
-   s_pos = [NaN NaN NaN];
-   domain_size = [NaN NaN NaN];
+    polarization = 0;
+    s_pos = [NaN NaN NaN];
+    domain_size = [NaN NaN NaN];
 end
 
 %%%%%%%%%%%%%%%%%%%%% Here we read into the snaps themselves, producing a

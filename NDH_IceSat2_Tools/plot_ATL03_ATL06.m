@@ -39,7 +39,7 @@ include_phots = 1;
 include_map = 0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% xaxis flag
-xaxis_flag = 3;
+xaxis_flag = 0;
 %%%% 0 - x_RGT
 %%%% 1 - time
 %%%% 2 - relative x_RGT for granule
@@ -144,7 +144,8 @@ for j = 1:length(atl03s)
             td03 = read_ATL03_h5(atl03_fname,subsetflag,0,0.01);
             td06 = read_ATL06_h5(atl06_fname,subsetflag,0,0.01);
             if mod(xaxis_flag,2) == 0
-                shifter = eval(['td.gt',num2str(bp),'l.heights.dist_ph_along(1)']);
+                shifter = eval(['td03.gt',num2str(bp),'l.heights.dist_ph_along(1)']);
+                shifter6 = 0;
             else
                 shifter = eval(['td03.ancillary_data.start_delta_time']);
                 shifter6 = eval(['td06.ancillary_data.start_delta_time']);

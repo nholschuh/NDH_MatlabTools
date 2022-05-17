@@ -74,11 +74,17 @@ end
 
 
 if data_set == 1
-    [x y z] = grdread('Bedmap2_bed.grd');
+    [x y z] = geotiffread_ndh('bedmap2_bed.tif');
+    z = double(z);
+    %[x y z] = grdread('Bedmap2_bed.grd');
 elseif data_set == 2
-    [x y z] = grdread('Bedmap2_surface.grd');
+    [x y z] = geotiffread_ndh('bedmap2_surface.tif');
+    z = double(z);
+    %[x y z] = grdread('Bedmap2_surface.grd');
 elseif data_set == 3
-    [x y z] = grdread('Bedmap2_thickness.grd');
+    [x y z] = geotiffread_ndh('bedmap2_thickness.tif');
+    z = double(z);
+    %[x y z] = grdread('Bedmap2_thickness.grd');
 elseif data_set == 4
     [x y z] = grdread('g104c_geoid_to_WGS84.nc');
 elseif data_set == 5
@@ -91,14 +97,16 @@ elseif data_set == 8
     load moa_groundedmask.mat
     x = ix;
     y = iy;
-    z = gl_mask;
+    z = flipud(gl_mask);
     clearvars ix iy gl_mask
 elseif data_set == 9   
     [x y z] = grdread('BenSurface.nc');
 elseif data_set == 10   
-    [x y z] = grdread('MC_Bed.nc');
+    [x y z] = grdread('MC_Bed.nc','bed',1,'x','y');
 elseif data_set == 11   
     [x y z] = grdread('REMA_200m_dem.nc');
+    z = flipud(z);
+    y = flipud(y);
 end  
 
 
@@ -232,12 +240,21 @@ y1index = length(y) - y2index + 1;
 y2index = temp;
 
 %%
-z = flipud(z);
-zdata = z(y1index:y2index,x1index:x2index);
-zdata = flipud(zdata);
+if i > 3
+    z = flipud(z);
+    zdata = z(y1index:y2index,x1index:x2index);
+    zdata = flipud(zdata);
+else
+    zdata = z(y1index:y2index,x1index:x2index);
+    zdata = flipud(zdata);
+    yscale = flipud(yscale);
+end
 
 if plotter == 1
     imagesc(xscale,yscale,zdata)
+    if data_set == 1
+        colormap(gmt_to_matlab_colormap(1))
+    end
     set(gca,'YDir','Normal')
 end
 

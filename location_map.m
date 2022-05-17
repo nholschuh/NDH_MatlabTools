@@ -1,4 +1,4 @@
-function location_map(x1,x2,y1,y2,quadrant_val,m0_or_km1,ant0_or_gre1,size_scale,latlon_flag);
+function location_map(x1,x2,y1,y2,quadrant_val,m0_or_km1,ant0_or_gre1,size_scale,latlon_flag,newaxis_flag);
 % (C) Nick Holschuh - U. of Washington - 2018 (Nick.Holschuh@gmail.com)
 % Plots an Antarctic or Greenland Basemap on a figure, with a box outlining
 % either a target area or the current figure limits
@@ -6,7 +6,8 @@ function location_map(x1,x2,y1,y2,quadrant_val,m0_or_km1,ant0_or_gre1,size_scale
 % The inputs are as follows:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% x1 - Left X Limit (set as 0, along with x2, to use figure xlim/ylim)
+% x1 - Left X Limit (set as 0, along with x2, to use figure xlim/ylim) This
+%       can also be an Nx2 vector to plot a line instead of a box.
 % x2 - Right X Limit
 % y1 - Bottom Y Limit
 % y2 - Top Y Limit
@@ -16,6 +17,7 @@ function location_map(x1,x2,y1,y2,quadrant_val,m0_or_km1,ant0_or_gre1,size_scale
 % size_scale - This is a fractional scaling factor for the size of the
 %              basemap
 % latlon_flag - include latitidue and longitude markers
+% newaxis_flag - Allows you to suppress the creation of a new axis
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -35,6 +37,10 @@ if m0_or_km1 == 0
     mscaler = 1;
 else
     mscaler = 1000;
+end
+
+if exist('newaxis_flag') == 0
+    newaxis_flag = 1;
 end
 
 % if max(size(x1)) > 2
@@ -107,17 +113,21 @@ sv = 0.3*size_scale;
 mf1 = 0.075; % the margin fraction (horizontal)
 mf2 = 0.05; % the margin fraction (vertical)
 
-%%%% Notes:
-%%% ca(1:2) + ca(3:4) -> the top right corner position of the axes
-if quadrant_val == 1
-    axes('Position',[ca(1:2)+ca(3:4)-[(sv+mf1)/ratio sv+mf2] sv/ratio sv])
-elseif quadrant_val == 2
-    axes('Position',[ca(1:2)+[0 ca(4)]+[mf1/ratio -1*(sv+mf2)] sv/ratio sv])
-elseif quadrant_val == 3
-    axes('Position',[ca(1:2)+[mf1/ratio mf2] sv/ratio sv])
-elseif quadrant_val == 4
-    axes('Position',[ca(1:2)+[ca(3) 0]+[(sv+mf1)/-ratio mf2] sv/ratio sv])
+if newaxis_flag == 1
+    %%%% Notes:
+    %%% ca(1:2) + ca(3:4) -> the top right corner position of the axes
+    if quadrant_val == 1
+        axes('Position',[ca(1:2)+ca(3:4)-[(sv+mf1)/ratio sv+mf2] sv/ratio sv])
+    elseif quadrant_val == 2
+        axes('Position',[ca(1:2)+[0 ca(4)]+[mf1/ratio -1*(sv+mf2)] sv/ratio sv])
+    elseif quadrant_val == 3
+        axes('Position',[ca(1:2)+[mf1/ratio mf2] sv/ratio sv])
+    elseif quadrant_val == 4
+        axes('Position',[ca(1:2)+[ca(3) 0]+[(sv+mf1)/-ratio mf2] sv/ratio sv])
+    end
 end
+
+
 %%%%%%%%%%%% These are the grayscale values for plotting
     cc1 = 0.93; % Slower Contour
     cc2 = 0.85; % Fastest Contour
@@ -167,8 +177,8 @@ end
     
 %%%%%%%%%%%%%%%%%%%% This plots the inset box
 
-    %cs = color_call('darkblue');
-    cs = color_call('red');
+    cs = color_call('darkblue');
+    %cs = color_call('red');
     
     if max(size(x1)) == 1
         plot([x1 x1 x2 x2 x1],[y1 y2 y2 y1 y1],'Color',cs,'LineWidth',2)

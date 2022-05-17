@@ -91,13 +91,13 @@ for i = 1:length(lines2)         % Compare each line
                         end 
                         search_range = search_range+5;
                         if search_range > 200
-                                %disp(['Refinement Failed - ',num2str(i),',',num2str(j)])
-                                intersect_mat(i,j) = 0;
-                                intersect_mat(j,i) = 0;
-                                break
-                                
+                            %disp(['Refinement Failed - ',num2str(i),',',num2str(j)])
+                            intersect_mat(i,j) = 0;
+                            intersect_mat(j,i) = 0;
+                            break
+                            
                             keyboard
-                             
+                            
                             plot(lines{i}(:,1),lines{i}(:,2),'Color','red')
                             hold all
                             plot(lines{j}(:,1),lines{j}(:,2),'Color','blue')
@@ -116,6 +116,13 @@ for i = 1:length(lines2)         % Compare each line
         end
     end
     %disp(['Completed Line ',num2str(i),' of ',num2str(length(lines2)),' - ',num2str(sum(intersect_mat(i,:))),' intersections - ',num2str(round_to(toc,0.1)),'s'])
+end
+
+if exist('intersect_point') == 0
+    intersect_point = NaN;
+end
+if exist('intersect_ind') == 0
+    intersect_ind = NaN;
 end
 
 end

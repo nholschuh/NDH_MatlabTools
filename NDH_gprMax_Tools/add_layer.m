@@ -71,6 +71,10 @@ fclose(fid);
 fid=fopen(filename,'a');
 
 
+    xlims = [0 vals(1)];
+    ylims = [0 vals(2)];
+
+
 if dielectric_smoothing == 1
     ds_char = 'y';
 else

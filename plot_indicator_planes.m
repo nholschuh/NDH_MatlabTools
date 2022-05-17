@@ -1,4 +1,4 @@
-function plot_indicator_planes(value,horiz1_or_vert2_or_sloped3,EdgeColor,EdgeAlpha,SurfaceColor);
+function plot_indicator_planes(value,horiz1_or_vert2_or_sloped3,EdgeColor,EdgeAlpha,SurfaceColor,SurfAlpha);
 % (C) Nick Holschuh - Penn State University - 2016 (Nick.Holschuh@gmail.com)
 % Takes a series of points and plots them as horizontal (1) or vertical (2)
 % lines on a pre-existing plot
@@ -31,6 +31,9 @@ end
 if exist('SurfaceColor') == 0
     SurfaceColor = [0 0 0];
 end
+if exist('SurfAlpha') == 0
+    SurfAlpha = 0.2;
+end
 
 SurfaceColor = color_call(SurfaceColor);
 EdgeColor = color_call(EdgeColor);
@@ -49,7 +52,7 @@ if horiz1_or_vert2_or_sloped3 == 1
     C(:,:,3) = ones(size(zm))*SurfaceColor(3);
     
     hs = surface(xm,ym,zm,C,'EdgeColor',EdgeColor);
-    alpha(hs,0.2);
+    alpha(hs,SurfAlpha);
     set(hs,'EdgeAlpha',EdgeAlpha)
 elseif horiz1_or_vert2_or_sloped3 == 2
 

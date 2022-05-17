@@ -5,6 +5,7 @@ start = min(find(t0 >= 0));
 traces = traces(start:end,:);
 t0 = t0(start:end);
 
+
 for i = 1:length(traces)
     t_correction(i,:) = t0(i)*(sqrt(1+(x/(velocity_depth(i)*t0(i))).^2)-1);
 end

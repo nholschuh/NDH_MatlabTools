@@ -12,7 +12,8 @@ function pdf_ndh(filename,margin_size,all_flag,pdf0_or_png1,pdf_compressor)
 % all_flag - This determines if only the active figure (0) or all figures
 %               (1) should be written
 % pdf_compressor - If the below flag is set to 0, it is forced to be a
-% vector
+% vector image. Otherwise, matlab will decide based on file size if it
+% should compress the data to an image (instead of a vector)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -36,10 +37,6 @@ if exist('all_flag') == 0
     all_flag = 0;
 end
 
-if exist('new_or_append') == 0
-    new_or_append = 0;
-end
-
 plot_wins = get(0,'children');
 if all_flag == 0
     loops = 1;
@@ -55,6 +52,7 @@ if pdf0_or_png1 == 0
     pflag = '-dpdf';
 elseif pdf0_or_png1 == 1
     pflag = '-dpng';
+    %set(gcf,'Color','none')
 end
 
 for i = 1:loops
@@ -78,7 +76,12 @@ for i = 1:loops
         else
             set(plot_wins(i),'Renderer','Painters');
         end
-        
+    else
+        %         if all_flag == 0
+        %             set(gcf,'Renderer','zbuffer');
+        %         else
+        %             set(plot_wins(i),'Renderer','zbuffer');
+        %         end
     end
     
     if scale_method == 1
@@ -100,13 +103,9 @@ for i = 1:loops
     if all_flag == 0
         
         set(gcf,'PaperPositionMode','manual','PaperSize',PaperSize_vals,'PaperUnits',PU,'PaperPosition',PP);
-        if exist(filename) == 2 & new_or_append == 1 & pdf0_or_png1 == 0
-            print(gcf,pflag,'temp')
-            append_pdfs([filename,'.pdf'],[filename,'.pdf'],'temp.pdf')
-        else
-            print(gcf,pflag,filename)
-        end
-
+        print(gcf,pflag,filename)
+        
+        
     else
         set(plot_wins(i),'PaperPositionMode','manual','PaperSize',PaperSize_vals,'PaperUnits',PU,'PaperPosition',PP);
         print(plot_wins(i),pflag, [filename,'_',num2str(plot_wins(i).Number)])

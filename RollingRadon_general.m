@@ -84,7 +84,7 @@ for k = 1:steps
     %%%% THIS IS THE INTERPOLATION STEP! THIS IS CRITICAL TO THE PROPER
     %%%% FUNCTIONING OF THE CODE
     filt_data = Data(:,breaks(k):breaks(k+1)-1);
-    [data xaxis yaxis] = regrid(dist(breaks(k):breaks(k+1)-1),data_y,filt_data,0,0);
+    [xaxis yaxis data] = regrid(dist(breaks(k):breaks(k+1)-1),data_y,filt_data,0,0);
 
     %% This determines if it is the first subset of the data, if so variables are initialized
     if exist('previous_xsteps') == 0
@@ -175,7 +175,12 @@ for k = 1:steps
                     skipflag = 1;
                     status_flag(j,i+(k-1)*roll_steps) = 2;
                 else
-                    [opt_angle(j,i+(k-1)*roll_steps) rd] = radon_ndh(xaxis(start:stop),yaxis(start2:stop2),radon_data,0,0);
+                    try
+                        [opt_angle(j,i+(k-1)*roll_steps) rd] = radon_ndh(xaxis(start:stop),yaxis(start2:stop2),radon_data,0,0);
+                    catch
+                        opt_angle(j,i+(k-1)*roll_steps) = NaN;
+                        rd = NaN;
+                    end
                     if isnan(opt_angle(j,i+(k-1)*roll_steps)) == 1
                         status_flag(j,i+(k-1)*roll_steps) = 2;
                     end

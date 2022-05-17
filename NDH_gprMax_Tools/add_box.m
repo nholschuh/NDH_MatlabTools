@@ -16,7 +16,7 @@ function add_box(filename,depth_to_top,thickness,xlims,ylims,perm_and_cond,diele
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 
-freespace_thickness = 15;
+freespace_thickness = 50;
 
 filename = [filename,'.in'];
 fid=fopen(filename,'r');

@@ -23,7 +23,8 @@ function [output startind endind]=read_ATL03_h5(h5_file,subset_flag,startind,end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 
-keep_vars = {'h_ph','dist_ph_along','segment_id','segment_dist_x','segment_ph_cnt','segment_length','signal_conf_ph','delta_time','start_delta_time'};
+keep_vars = {'h_ph','dist_ph_along','segment_id','segment_dist_x','segment_ph_cnt','segment_length','signal_conf_ph','delta_time','start_delta_time', ...
+    'reference_photon_lat','reference_photon_lon','lat_ph','lon_ph'};
 
 
 if exist('subset_flag') == 0

@@ -1,4 +1,4 @@
-function [output]=read_IceSAT_h5(h5_file,output_type,filt_ant1_gre2)
+function [output]=read_IceSAT_h5(h5_file,output_type)
 % (C) Nick Holschuh - University of Washington - 2017 (Holschuh@uw.edu)
 % This function reads in the IceSAT .h5 file produced through the NASA SDC
 % system, using the land ice algorithm produced by Ben Smith

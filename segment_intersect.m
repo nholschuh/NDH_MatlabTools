@@ -110,7 +110,10 @@ end
 if index == 1
     intersection = [intersectionx intersectiony];
 else
-    intersection = 0;
+    %%% This next line was commented out when I realized I wanted to find
+    %%% the intersection value for lines not actually interecting
+    %intersection = 0;
+    intersection = [intersectionx intersectiony];
 end
 indexfinal = index;
 

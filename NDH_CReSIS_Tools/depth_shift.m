@@ -50,8 +50,9 @@ if exist('disp_flag') == 0
 end
 
 
-cice_import;
-cair_import;
+cair =  299792458;
+cice = cair/sqrt(3.15);
+
 
 %% Computes ice thickness if the bed pick is supplied
 if exist('bed') == 1
@@ -68,7 +69,9 @@ if exist('bed') == 1
     end
     
     if ind_flag2 == 1
-        bed_time = time(round(interpNaN(bed)));
+        temp_inds = interpNaN(bed);
+        temp_inds(find(temp_inds < 1)) = 1;
+        bed_time = time(round(temp_inds));
     else
         bed_time = bed;
     end
@@ -121,7 +124,7 @@ top = max(surface_elev) + 100;
 surface_elev = interpNaN(surface_elev);
 
 for i = 1:length(data(1,:))
-    shift_amount2(i) = round((top-surface_elev(i))/dx);
+    shift_amount2(i) = round((top-surface_elev(i))/dx)+1;
     select_inds = 1:length(time)-shift_amount2(i)+1;
     new_data2(shift_amount2(i):end,i) = new_data1(select_inds,i);
     if mod(i-1,steps) == 0

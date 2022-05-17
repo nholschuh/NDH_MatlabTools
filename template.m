@@ -1,4 +1,4 @@
-% (C) Nick Holschuh - U. of Washington - 2019 (Nick.Holschuh@gmail.com)
+% (C) Nick Holschuh - Amherst College - 2020 (Nick.Holschuh@gmail.com)
 % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % The inputs are as follows:

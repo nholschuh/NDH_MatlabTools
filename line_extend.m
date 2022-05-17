@@ -56,11 +56,11 @@ slope2 = slopeintercept([x(end) y(end)],[x(end-1) y(end-1)]);
 s2_u = [sqrt(1/(slope2^2+1)) slope2*sqrt(1/(slope2^2+1))];
 
 if length(x(1,:)) > length(x(:,1))
-    x2 = [x(1)-s1_u(1)*(1:front_steps) x x(end)+s2_u(1)*(1:back_steps)*dx];
-    y2 = [y(1)-s1_u(2)*(1:front_steps) y y(end)+s2_u(2)*(1:back_steps)*dx];
+    x2 = [x(1)-s1_u(1)*(fliplr(1:front_steps)) x x(end)+s2_u(1)*(1:back_steps)*dx];
+    y2 = [y(1)-s1_u(2)*(fliplr(1:front_steps)) y y(end)+s2_u(2)*(1:back_steps)*dx];
 else
-    x2 = [x(1)-s1_u(1)*[1:front_steps]'; x; x(end)+s2_u(1)*[1:back_steps]'*dx];
-    y2 = [y(1)-s1_u(2)*[1:front_steps]'; y; y(end)+s2_u(2)*[1:back_steps]'*dx];
+    x2 = [x(1)-s1_u(1)*fliplr([1:front_steps])'; x; x(end)+s2_u(1)*[1:back_steps]'*dx];
+    y2 = [y(1)-s1_u(2)*fliplr([1:front_steps])'; y; y(end)+s2_u(2)*[1:back_steps]'*dx];
 end
 
 

@@ -40,6 +40,7 @@ if ant0_or_green1 == 0
         '13 - Jutulstraumen Glacier', ...
         '14 - Amery Ice Shelf - Fisher Glacier, Mellor Glacier, and Lambert Glacier', ...
         '15 - Totten Glacier', ...
+        '16 - Whillans Ice Plain'
         };
     
 elseif ant0_or_green1 == 1
@@ -142,6 +143,10 @@ if ant0_or_green1 == 0
     elseif rnum == 15
         %%%% Totten Glacier
         region_box{1} = [1672530.66918172,-1406440.07613223;2494072.59191878,-532742.301867576];
+   
+    elseif rnum == 16
+        %%%% Whillans Ice Plain
+        region_box{1} = [-345131,-795676;-50167,-486761];
     end
     
 elseif ant0_or_green1 == 1

@@ -66,6 +66,10 @@ else
     type2 = 0;
 end
 
+if max(pick) == Inf
+    pick(find(pick == Inf)) = NaN;
+end
+
 if abs(time(2) - time(1)) > .00001
     time = time*10e-6;
 end

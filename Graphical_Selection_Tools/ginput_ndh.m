@@ -95,7 +95,7 @@ if strcmp(icon_type,'standard')==1
     pointershape([16-inner_box 16+inner_box],16-inner_box:16+inner_box) = 1;
     pointershape(16-inner_box:16+inner_box,[16-inner_box 16+inner_box]) = 1;
 
-    ptag = [16,16];
+    ptag = [15,15];
 end
 
 

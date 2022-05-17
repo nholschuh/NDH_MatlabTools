@@ -13,4 +13,7 @@ end
 if exist('C:\Users\nickh\Desktop','dir') == 7
 		 cd C:\Users\nickh\Desktop
 end
+if exist('C:\Users\nholschuh\Desktop\','dir') == 7
+		 cd C:\Users\nholschuh\Desktop\
+end
 		 

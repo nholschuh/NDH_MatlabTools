@@ -21,10 +21,10 @@ switch(info.byte_order)
     case 'BigEndian', read_bo='b'; %b. n-native
 end
 
-real_dims = [(info.Extent(2)-info.Extent(1))/info.Spacing(1) (info.Extent(4)-info.Extent(3))/info.Spacing(2) (info.Extent(6)-info.Extent(5))/info.Spacing(3)];
-axes{1} = [1:real_dims(1)]*info.Spacing(1)-0.5*info.Spacing(1)+info.Extent(1);
-axes{2} = [1:real_dims(2)]*info.Spacing(2)-0.5*info.Spacing(2)+info.Extent(3); 
-axes{3} = [1:real_dims(3)]*info.Spacing(3)-0.5*info.Spacing(3)+info.Extent(5);
+real_dims = round([(info.Extent(2)-info.Extent(1)) (info.Extent(4)-info.Extent(3)) (info.Extent(6)-info.Extent(5))]);
+axes{1} = [1:real_dims(1)]*info.Spacing(1)-0.5*info.Spacing(1)+info.Extent(1)*info.Spacing(1);
+axes{2} = [1:real_dims(2)]*info.Spacing(2)-0.5*info.Spacing(2)+info.Extent(3)*info.Spacing(2); 
+axes{3} = [1:real_dims(3)]*info.Spacing(3)-0.5*info.Spacing(3)+info.Extent(5)*info.Spacing(3);
     
 
 % Read the Data
@@ -53,8 +53,8 @@ for j = 1:length(info.var)
     start_data = fread(fid,[1 prod(real_dims)*info.var(j).NumberOfComponents],type);
     
     for i = 1:info.var(j).NumberOfComponents
-        temp = start_data(1:info.var(j).NumberOfComponents:end);
-        temp = reshape(temp,real_dims);
+        temp2 = start_data(1:info.var(j).NumberOfComponents:end);
+        temp = reshape(temp2,real_dims);
         write_str = ['outdata.',remove_illegalcharacters(info.var(j).Name),'.Component',num2str(i),' = temp;'];
         eval(write_str);
     end

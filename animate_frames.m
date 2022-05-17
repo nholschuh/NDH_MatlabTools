@@ -20,7 +20,7 @@ function subset_out = animate_frames(videoname,dirname,framerate,subsetter,start
 
 v2 = VideoWriter([videoname,'.mp4'],'MPEG-4');
 v2.FrameRate=framerate;
-v2.Quality = 30; % Default value is 75
+v2.Quality = 75; % Default value is 75
 open(v2)
 
 %%% This extracts the image frame file names
@@ -58,7 +58,7 @@ for i = 1:(length(fileprefix)-1)
     frame_prefix = [frame_prefix,fileprefix{i},'_'];
 end
 
-frame = imread(['./',dirname,'/',frame_prefix,sprintf('%04d',1),suffix]);
+frame = imread(['./',dirname,'/',frame_prefix,sprintf('%04d',startframe),suffix]);
     if max(flipimage == 1) == 1
         frame(:,:,1) = fliplr(frame(:,:,1));
         frame(:,:,2) = fliplr(frame(:,:,2));

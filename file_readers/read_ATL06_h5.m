@@ -1,4 +1,4 @@
-function [output]=read_ATL06_h5(h5_file,subset_flag,startind,endind)
+function [output]=read_ATL06_h5(h5_file,subset_flag,startind,endind,addedfields)
 % (C) Nick Holschuh - University of Washington - 2018 (Holschuh@uw.edu)
 % This function reads in the ATL06 .h5 file produced through the NASA SDC
 % system, using the land ice algorithm produced by Ben Smith
@@ -14,6 +14,7 @@ function [output]=read_ATL06_h5(h5_file,subset_flag,startind,endind)
 %        the variables
 %     Inf: full length of the granule, but only containing a subset of the
 %        variables
+%     -Inf: Just the baseline file information (like RGT)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% Outputs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -23,7 +24,19 @@ function [output]=read_ATL06_h5(h5_file,subset_flag,startind,endind)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 
-keep_vars = {'h_li','latitude','longitude','segment_id','x_atc','dh_fit_dx','qa_granule_pass_fail','atl06_quality_summary','rgt','x_atc','y_atc','cloud_flg_atm','delta_time','start_delta_time','end_delta_time','atlas_sdp_gps_epoch'};
+if subset_flag > -Inf
+    keep_vars = {'h_li','latitude','longitude','segment_id','x_atc','dh_fit_dx', ...
+        'qa_granule_pass_fail','atl06_quality_summary','rgt','x_atc','y_atc', ...
+        'cloud_flg_atm','delta_time','start_delta_time','end_delta_time','atlas_sdp_gps_epoch'};
+    %keep_vars = {'h_li','latitude','longitude','atl06_quality_summary','delta_time','start_delta_time','end_delta_time','atlas_sdp_gps_epoch'};
+else
+    keep_vars = {'rgt'};
+end
+
+if exist('added_fields') == 0
+    added_fields = {};
+end
+keep_vars = [keep_vars added_fields];
 
 if exist('subset_flag') == 0
     subset_flag = 0;
@@ -31,15 +44,22 @@ if exist('subset_flag') == 0
     countnum = 0;
 end
 
-if subset_flag == Inf | subset_flag == 2
+if subset_flag == Inf | subset_flag == 2 | subset_flag == -Inf
     name_comp = 1;
 else
     name_comp = 0;
 end
 
-I=h5info(h5_file,'/');
+if subset_flag > -Inf
+    I=h5info(h5_file,'/');
+else
+    I=h5info(h5_file,'/orbit_info');
+    I2 = struct('Filename',I.Filename,'Name','/','Attributes',[]);
+    I2.Groups(1) = I;
+    I = I2;
+end
 
-if exist('startind') == 0 
+if exist('startind') == 0
     startind = 0;
 end
 if exist('endind') == 0
@@ -70,6 +90,11 @@ for i = 1:length(I.Groups)
             startind = double(segids(startcount(i)));
             endind = double(segids(startcount(i)+countnum(i)-1));
         end
+        
+        if countnum(i) == 1
+            countnum(i) = 0;
+        end
+        
     else
         seglength(i) = 0;
         subset_group(i) = 0;
@@ -82,6 +107,7 @@ end
 %%%%%%%%%%%%%%% This extracts the attributs of the hd5 file itself, and
 %%%%%%%%%%%%%%% saves it to the object GranuleMeta
 for i = 1:length(I.Attributes)
+    I.Attributes(i).Name = remove_illegalcharacters(I.Attributes(i).Name,' ');
     wrt_str = ['output.GranuleMeta.',I.Attributes(i).Name,' = I.Attributes(i).Value;'];
     eval(wrt_str)
 end
@@ -101,13 +127,14 @@ for i = 1:length(I.Groups)
     rn_str = [rn_str(1:end-1),');'];
     eval(rn_str);
     
+    if subset_flag > -Inf
     %%%%% Loop through the attributes and save them into the meta
     %%%%% substructure
     for j = 1:length(I.Groups(i).Attributes)
         wrt_str = ['output',rn3,'Meta.',I.Groups(i).Attributes(j).Name,' = I.Groups(i).Attributes(j).Value;'];
         eval(wrt_str)
     end
-    
+    end
     
     %%%%% Loop through the datasets for this group
     for j = 1:length(I.Groups(i).Datasets)
@@ -152,97 +179,33 @@ for i = 1:length(I.Groups)
         end
     end
     
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%% Loop into the subgroups
-    for j = 1:length(I.Groups(i).Groups)
-        %%%%% Get the new naming structure
-        rn = I.Groups(i).Groups(j).Name;
-        rn2 = strsplit(rn,'/');
-        rn_str = ['rn3 = strcat('];
-        for k = 1:length(rn2)
-            rn_str = [rn_str,'''',rn2{k},''',''.'','];
-        end
-        rn_str = [rn_str(1:end-1),');'];
-        eval(rn_str);
+    if subset_flag > -Inf
         
-        %%%%% Loop through the attributes and save them into the meta
-        %%%%% substructure
-        for k = 1:length(I.Groups(i).Groups(j).Attributes)
-            wrt_str = ['output',rn3,'Meta.',I.Groups(i).Groups(j).Attributes(k).Name,' = I.Groups(i).Groups(j).Attributes(k).Value;'];
-            eval(wrt_str)
-        end
-        
-        
-        %%%%% Loop through the datasets for this group
-        for k = 1:length(I.Groups(i).Groups(j).Datasets)
-            vardims = I.Groups(i).Groups(j).Datasets(k).Dataspace.Size;
-            varname = I.Groups(i).Groups(j).Datasets(k).Name;
-            if name_comp == 0 | strcmp_ndh(keep_vars,varname) == 1
-                if length(vardims) == 1
-                    vardims = [1 vardims];
-                    h5rank = 1;
-                else
-                    h5rank = 2;
-                end
-                if subset_group(i) == 1
-                    %%%%%%%%%%% The subset case for both photon counts and segment
-                    %%%%%%%%%%% counting variables
-                    if max(vardims) == seglength(i)
-                        if vardims(1) == seglength(i)
-                            h5start = [startcount(i) 1];
-                            h5count = [countnum(i) vardims(2)];
-                        else
-                            h5start = [1 startcount(i)];
-                            h5count = [vardims(1) countnum(i)];
-                        end
-                    else
-                        h5start = [1 1];
-                        h5count = [vardims(1) vardims(2)];
-                    end
-                else
-                    h5start = [1 1];
-                    h5count = [vardims(1) vardims(2)];
-                end
-                if h5rank == 1
-                    h5start = h5start(2);
-                    h5count = h5count(2);
-                end
-                
-                if max(h5count) > 0
-                    wrt_str = ['output',rn3,varname,' = h5read(h5_file,[''',rn,''',''/'',''',varname,'''],h5start,h5count);'];
-                    eval(wrt_str)
-                end
-            end
-        end
-        
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%% Loop into the subgroups one more time
-        for k = 1:length(I.Groups(i).Groups(j).Groups)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%% Loop into the subgroups
+        for j = 1:length(I.Groups(i).Groups)
             %%%%% Get the new naming structure
-            rn = I.Groups(i).Groups(j).Groups(k).Name;
+            rn = I.Groups(i).Groups(j).Name;
             rn2 = strsplit(rn,'/');
             rn_str = ['rn3 = strcat('];
-            for l = 1:length(rn2)
-                rn_str = [rn_str,'''',rn2{l},''',''.'','];
+            for k = 1:length(rn2)
+                rn_str = [rn_str,'''',rn2{k},''',''.'','];
             end
             rn_str = [rn_str(1:end-1),');'];
             eval(rn_str);
             
             %%%%% Loop through the attributes and save them into the meta
             %%%%% substructure
-            for l = 1:length(I.Groups(i).Groups(j).Groups(k).Attributes)
-                if max(rn3 == '-') == 1
-                    rn3(find(rn3 == '-')) = [];
-                end
-                wrt_str = ['output',rn3,'Meta.',I.Groups(i).Groups(j).Groups(k).Attributes(l).Name,' = I.Groups(i).Groups(j).Groups(k).Attributes(l).Value;'];
+            for k = 1:length(I.Groups(i).Groups(j).Attributes)
+                wrt_str = ['output',rn3,'Meta.',I.Groups(i).Groups(j).Attributes(k).Name,' = I.Groups(i).Groups(j).Attributes(k).Value;'];
                 eval(wrt_str)
             end
             
             
             %%%%% Loop through the datasets for this group
-            for kk = 1:length(I.Groups(i).Groups(j).Groups(k).Datasets)
-                vardims = I.Groups(i).Groups(j).Groups(k).Datasets(kk).Dataspace.Size;
-                varname = I.Groups(i).Groups(j).Groups(k).Datasets(kk).Name;
+            for k = 1:length(I.Groups(i).Groups(j).Datasets)
+                vardims = I.Groups(i).Groups(j).Datasets(k).Dataspace.Size;
+                varname = I.Groups(i).Groups(j).Datasets(k).Name;
                 if name_comp == 0 | strcmp_ndh(keep_vars,varname) == 1
                     if length(vardims) == 1
                         vardims = [1 vardims];
@@ -281,6 +244,72 @@ for i = 1:length(I.Groups)
                 end
             end
             
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            %%%%% Loop into the subgroups one more time
+            for k = 1:length(I.Groups(i).Groups(j).Groups)
+                %%%%% Get the new naming structure
+                rn = I.Groups(i).Groups(j).Groups(k).Name;
+                rn2 = strsplit(rn,'/');
+                rn_str = ['rn3 = strcat('];
+                for l = 1:length(rn2)
+                    rn_str = [rn_str,'''',rn2{l},''',''.'','];
+                end
+                rn_str = [rn_str(1:end-1),');'];
+                eval(rn_str);
+                
+                %%%%% Loop through the attributes and save them into the meta
+                %%%%% substructure
+                for l = 1:length(I.Groups(i).Groups(j).Groups(k).Attributes)
+                    if max(rn3 == '-') == 1
+                        rn3(find(rn3 == '-')) = [];
+                    end
+                    wrt_str = ['output',rn3,'Meta.',I.Groups(i).Groups(j).Groups(k).Attributes(l).Name,' = I.Groups(i).Groups(j).Groups(k).Attributes(l).Value;'];
+                    eval(wrt_str)
+                end
+                
+                
+                %%%%% Loop through the datasets for this group
+                for kk = 1:length(I.Groups(i).Groups(j).Groups(k).Datasets)
+                    vardims = I.Groups(i).Groups(j).Groups(k).Datasets(kk).Dataspace.Size;
+                    varname = I.Groups(i).Groups(j).Groups(k).Datasets(kk).Name;
+                    if name_comp == 0 | strcmp_ndh(keep_vars,varname) == 1
+                        if length(vardims) == 1
+                            vardims = [1 vardims];
+                            h5rank = 1;
+                        else
+                            h5rank = 2;
+                        end
+                        if subset_group(i) == 1
+                            %%%%%%%%%%% The subset case for both photon counts and segment
+                            %%%%%%%%%%% counting variables
+                            if max(vardims) == seglength(i)
+                                if vardims(1) == seglength(i)
+                                    h5start = [startcount(i) 1];
+                                    h5count = [countnum(i) vardims(2)];
+                                else
+                                    h5start = [1 startcount(i)];
+                                    h5count = [vardims(1) countnum(i)];
+                                end
+                            else
+                                h5start = [1 1];
+                                h5count = [vardims(1) vardims(2)];
+                            end
+                        else
+                            h5start = [1 1];
+                            h5count = [vardims(1) vardims(2)];
+                        end
+                        if h5rank == 1
+                            h5start = h5start(2);
+                            h5count = h5count(2);
+                        end
+                        
+                        if max(h5count) > 0
+                            wrt_str = ['output',rn3,varname,' = h5read(h5_file,[''',rn,''',''/'',''',varname,'''],h5start,h5count);'];
+                            eval(wrt_str)
+                        end
+                    end
+                end
+            end
         end
         
     end

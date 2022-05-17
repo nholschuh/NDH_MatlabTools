@@ -15,6 +15,59 @@ function output = color_call(color_str);
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
+
+
+%%%%%%%%%%%%%% This plots all blue examples
+if length(color_str) == 5; if color_str== 'blues';
+        
+        %%%%%%%%% Initiate all options
+        clist = {'red','tan','aqua','blue','cyan','gold','gray','lime','navy','peru','pink','plum','snow','teal','azure','beige','black','brown','coral','green','ivory','khaki','linen','olive','wheat','white','bisque','indigo','maroon','orange','orchid','purple','salmon','sienna','silver','tomato','violet','yellow','crimson','darkred','dimgray','fuchsia','hotpink','magenta','oldlace','skyblue','thistle','cornsilk','darkblue','darkcyan','darkgray','deeppink','honeydew','lavender','moccasin','seagreen','seashell','aliceblue','burlywood','cadetblue','chocolate','darkgreen','darkkhaki','firebrick','gainsboro','goldenrod','indianred','lawngreen','lightblue','lightcyan','lightgray','lightpink','limegreen','mintcream','mistyrose','olivedrab','orangered','palegreen','peachpuff','rosybrown','royalblue','slateblue','slategray','steelblue','turquoise','aquamarine','blueviolet','chartreuse','darkorange','darkorchid','darksalmon','darkviolet','dodgerblue','ghostwhite','lightcoral','lightgreen','mediumblue','papayawhip','powderblue','sandybrown','whitesmoke','darkmagenta','deepskyblue','floralwhite','forestgreen','greenyellow','lightsalmon','lightsalmon','lightyellow','navajowhite','saddlebrown','springgreen','yellowgreen','antiquewhite','darkseagreen','lemonchiffon','lightskyblue','mediumorchid','mediumpurple','midnightblue','darkgoldenrod','darkslateblue','darkslategray','darkturquoise','lavenderblush','lightseagreen','palegoldenrod','paleturquoise','palevioletred','rebeccapurple','blanchedalmond','cornflowerblue','darkolivegreen','lightslategray','lightsteelblue','mediumseagreen','mediumslateblue','mediumslateblue','mediumturquoise','mediumvioletred','mediumaquamarine','mediumspringgreen','lightgoldenrodyellow'};
+        copts = [[255,0,0];[210,180,140];[0,255,255];[0,0,255];[0,255,255];[255,215,0];[128,128,128];[0,255,0];[0,0,128];[205,133,63];[255,192,203];[221,160,221];[255,250,250];[0,128,128];[240,255,255];[245,245,220];[0,0,0];[165,42,42];[255,127,80];[0,128,0];[255,255,240];[240,230,140];[250,240,230];[128,128,0];[245,222,179];[255,255,255];[255,228,196];[75,0,130];[128,0,0];[255,165,0];[218,112,214];[128,0,128];[250,128,114];[160,82,45];[192,192,192];[255,99,71];[238,130,238];[255,255,0];[220,20,60];[139,0,0];[105,105,105];[255,0,255];[255,105,180];[255,0,255];[253,245,230];[135,206,235];[216,191,216];[255,248,220];[0,0,139];[0,139,139];[169,169,169];[255,20,147];[240,255,240];[230,230,250];[255,228,181];[46,139,87];[255,245,238];[240,248,255];[222,184,135];[95,158,160];[210,105,30];[0,100,0];[189,183,107];[178,34,34];[220,220,220];[218,165,32];[205,92,92];[124,252,0];[173,216,230];[224,255,255];[211,211,211];[255,182,193];[50,205,50];[245,255,250];[255,228,225];[107,142,35];[255,69,0];[152,251,152];[255,218,185];[188,143,143];[65,105,225];[106,90,205];[112,128,144];[70,130,180];[64,224,208];[127,255,212];[138,43,226];[127,255,0];[255,140,0];[153,50,204];[233,150,122];[148,0,211];[30,144,255];[248,248,255];[240,128,128];[144,238,144];[0,0,205];[255,239,213];[176,224,230];[244,164,96];[245,245,245];[139,0,139];[0,191,255];[255,250,240];[34,139,34];[173,255,47];[255,160,122];[255,160,122];[255,255,224];[255,222,173];[139,69,19];[0,255,127];[154,205,50];[250,235,215];[143,188,139];[255,250,205];[135,206,250];[186,85,211];[147,112,219];[25,25,112];[184,134,11];[72,61,139];[47,79,79];[0,206,209];[255,240,245];[32,178,170];[238,232,170];[175,238,238];[219,112,147];[102,51,153];[255,235,205];[100,149,237];[85,107,47];[119,136,153];[176,196,222];[60,179,113];[123,104,238];[123,104,238];[72,209,204];[199,21,133];[102,205,170];[0,250,154];[250,250,210];];
+        
+        [trash opts] = strcmp_ndh(clist,'blue',1);
+        [trash opts2] = strcmp_ndh(clist,'cyan',1);
+        hold off
+        for i = 1:length(opts)
+            bb = box_from_corners(0,1,i-1,i);
+            fill(bb(:,1),bb(:,2),copts(opts(i),:)/255);
+            hold all
+            text(1.5,i-0.5,clist(opts(i)))
+        end
+        for i = 1:length(opts2)
+            bb = box_from_corners(0,1,i-1+length(opts),i+length(opts));
+            fill(bb(:,1),bb(:,2),copts(opts2(i),:)/255);
+            text(1.5,i-0.5+length(opts),clist(opts2(i)))
+        end            
+        xlim([-1 5])
+    end
+end
+
+if length(color_str) == 7; if color_str== 'oranges';
+        
+        %%%%%%%%% Initiate all options
+        clist = {'red','tan','aqua','blue','cyan','gold','gray','lime','navy','peru','pink','plum','snow','teal','azure','beige','black','brown','coral','green','ivory','khaki','linen','olive','wheat','white','bisque','indigo','maroon','orange','orchid','purple','salmon','sienna','silver','tomato','violet','yellow','crimson','darkred','dimgray','fuchsia','hotpink','magenta','oldlace','skyblue','thistle','cornsilk','darkblue','darkcyan','darkgray','deeppink','honeydew','lavender','moccasin','seagreen','seashell','aliceblue','burlywood','cadetblue','chocolate','darkgreen','darkkhaki','firebrick','gainsboro','goldenrod','indianred','lawngreen','lightblue','lightcyan','lightgray','lightpink','limegreen','mintcream','mistyrose','olivedrab','orangered','palegreen','peachpuff','rosybrown','royalblue','slateblue','slategray','steelblue','turquoise','aquamarine','blueviolet','chartreuse','darkorange','darkorchid','darksalmon','darkviolet','dodgerblue','ghostwhite','lightcoral','lightgreen','mediumblue','papayawhip','powderblue','sandybrown','whitesmoke','darkmagenta','deepskyblue','floralwhite','forestgreen','greenyellow','lightsalmon','lightsalmon','lightyellow','navajowhite','saddlebrown','springgreen','yellowgreen','antiquewhite','darkseagreen','lemonchiffon','lightskyblue','mediumorchid','mediumpurple','midnightblue','darkgoldenrod','darkslateblue','darkslategray','darkturquoise','lavenderblush','lightseagreen','palegoldenrod','paleturquoise','palevioletred','rebeccapurple','blanchedalmond','cornflowerblue','darkolivegreen','lightslategray','lightsteelblue','mediumseagreen','mediumslateblue','mediumslateblue','mediumturquoise','mediumvioletred','mediumaquamarine','mediumspringgreen','lightgoldenrodyellow'};
+        copts = [[255,0,0];[210,180,140];[0,255,255];[0,0,255];[0,255,255];[255,215,0];[128,128,128];[0,255,0];[0,0,128];[205,133,63];[255,192,203];[221,160,221];[255,250,250];[0,128,128];[240,255,255];[245,245,220];[0,0,0];[165,42,42];[255,127,80];[0,128,0];[255,255,240];[240,230,140];[250,240,230];[128,128,0];[245,222,179];[255,255,255];[255,228,196];[75,0,130];[128,0,0];[255,165,0];[218,112,214];[128,0,128];[250,128,114];[160,82,45];[192,192,192];[255,99,71];[238,130,238];[255,255,0];[220,20,60];[139,0,0];[105,105,105];[255,0,255];[255,105,180];[255,0,255];[253,245,230];[135,206,235];[216,191,216];[255,248,220];[0,0,139];[0,139,139];[169,169,169];[255,20,147];[240,255,240];[230,230,250];[255,228,181];[46,139,87];[255,245,238];[240,248,255];[222,184,135];[95,158,160];[210,105,30];[0,100,0];[189,183,107];[178,34,34];[220,220,220];[218,165,32];[205,92,92];[124,252,0];[173,216,230];[224,255,255];[211,211,211];[255,182,193];[50,205,50];[245,255,250];[255,228,225];[107,142,35];[255,69,0];[152,251,152];[255,218,185];[188,143,143];[65,105,225];[106,90,205];[112,128,144];[70,130,180];[64,224,208];[127,255,212];[138,43,226];[127,255,0];[255,140,0];[153,50,204];[233,150,122];[148,0,211];[30,144,255];[248,248,255];[240,128,128];[144,238,144];[0,0,205];[255,239,213];[176,224,230];[244,164,96];[245,245,245];[139,0,139];[0,191,255];[255,250,240];[34,139,34];[173,255,47];[255,160,122];[255,160,122];[255,255,224];[255,222,173];[139,69,19];[0,255,127];[154,205,50];[250,235,215];[143,188,139];[255,250,205];[135,206,250];[186,85,211];[147,112,219];[25,25,112];[184,134,11];[72,61,139];[47,79,79];[0,206,209];[255,240,245];[32,178,170];[238,232,170];[175,238,238];[219,112,147];[102,51,153];[255,235,205];[100,149,237];[85,107,47];[119,136,153];[176,196,222];[60,179,113];[123,104,238];[123,104,238];[72,209,204];[199,21,133];[102,205,170];[0,250,154];[250,250,210];];
+        
+        
+        counter = 1;
+        str_comp_list = {'orange','brown','yellow','khaki','red','gold','beige'};
+        hold off
+        for j = 1:length(str_comp_list)
+            [trash opts] = strcmp_ndh(clist,str_comp_list{j},1);
+            for i = 1:length(opts)
+                bb = box_from_corners(0,1,counter-1,counter);
+                fill(bb(:,1),bb(:,2),copts(opts(i),:)/255);
+                hold all
+                text(1.5,counter-0.5,clist(opts(i)))
+                counter = counter+1;
+            end
+        end
+        xlim([-1 5])
+    end
+end
+
+
+
 if length(color_str) == 3; if color_str== 'red'; output = [255, 0, 0]; end; end;
 if length(color_str) == 3; if color_str== 'tan'; output = [210, 180, 140]; end; end;
 if length(color_str) == 4; if color_str== 'aqua'; output = [0, 255, 255]; end; end;

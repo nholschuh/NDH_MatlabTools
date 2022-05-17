@@ -46,7 +46,11 @@ function [sigma sigma_components] = IceConductivity(temp_k,H,Cl,NH4,parameterset
 
 %%%%%%%%%%%%%%%%%%%%%%%%% These are the pure-ice values that can be used
 if exist('parameterset') == 0
-    parameterset = 3;
+    parameterset = 0;
+end
+
+if exist('H') == 0
+    parameterset = 0;
 end
 
 debug = 0;
@@ -59,12 +63,15 @@ if parameterset == 0
     E0 = 0.33; % 0.33 eV
     T_ref = 251;
     
+    H = 0;
     mu_h = 0; %S/(m Mol)
     EH = 0; %eV
     
+    Cl = 0;
     mu_Cl = 0; %S/(m Mol)
     E_Cl = 0; %eV
     
+    NH4 = 0;
     mu_NH4 = 0; %S/(m Mol)
     E_NH4 = 0; %eV
     

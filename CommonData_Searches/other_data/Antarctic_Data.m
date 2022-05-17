@@ -16,6 +16,10 @@ function [y1 y2 y3] = Antarctic_Data(data_set,x1,x2,y1,y2,plotter,m0_km1_flag)
 %               9 - Temperature (Annual Mean Skin Temperature - ERA Interim 2014)
 %              10 - Helm (2014) dh/dt
 %              11 - McMillan (2014) dh/dt (cryosat-2)
+%              12 - GHF
+%              13 - GHF
+%              14 - GHF
+%              15 - Smith (2020) dh.dt (is2)
 % x1 - This input can take on two types of values:
 %         1) A number (either m or km, depending on a later flag) that
 %            defines the left boundary of the domain of interest.
@@ -88,7 +92,7 @@ elseif data_set == 8
 elseif data_set == 9
     [x y z] = grdread('AntarcticSkinTemp_ERA_Int_2014.nc');
 elseif data_set == 10
-    [x y z] = grdread('Helm_dhdt.grd');
+    [x y z] = grdread('Helm_dhdt.nc');
 elseif data_set == 11
     load('CS2_dzdt.mat')
     x = gridx;
@@ -96,6 +100,14 @@ elseif data_set == 11
     z = AIS_dzdt;
     clearvars gridx gridy AISdzdt
 elseif data_set == 12
+        [x y z] = grdread('GHF_An2015.nc');
+elseif data_set == 13
+        [x y z] = grdread('GHF_Purucker2013.nc');
+elseif data_set == 14
+        [x y z] = grdread('GHF_Martos2017.nc');
+elseif data_set == 15
+        [x y z] = geotiffread_ndh([OnePath,'Research_Projects\34_IceSat2\Tex_Writeup_IS1IS2_Comparison\ICESat2_dhdt_Manuscript\ICE1_ICE2_AnIS_dHdt_2003_2018_R209_05KM.tif']);
+    z = flipud(z);
 end
 
 
@@ -109,7 +121,7 @@ end
 
 xsteps = length(x);
 ysteps = length(y);
-celldim = abs(x(2)-x(1));
+celldim = median(abs(diff(x)));
 
 lxvalue = min(x);
 lyvalue = min(y);
@@ -224,14 +236,20 @@ xscale = lowx:celldim:highx;
 yscale = lowy:celldim:highy;
 
 %% Corrects for the fact that the y data is backward
-temp = length(y) - y1index;
-y1index = length(y) - y2index;
-y2index = temp;
+
+if y(1) > y(end)
+    temp = length(y) - y1index;
+    y1index = length(y) - y2index;
+    y2index = temp;
+    z = flipud(z);
+    zdata = z(y1index:y2index,x1index:x2index);
+    zdata = flipud(zdata);
+else
+    zdata = z(y1index:y2index,x1index:x2index);
+end
 
 %%
-z = flipud(z);
-zdata = z(y1index:y2index,x1index:x2index);
-zdata = flipud(zdata);
+
 
 if plotter == 1
     imagesc(xscale,yscale,zdata)

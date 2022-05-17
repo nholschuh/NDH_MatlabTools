@@ -8,7 +8,7 @@ function [y1,y2,y3,vel_im] = A_Velocity(data_set,xys,x1,x2,y1,y2,plotter,m0_km1_
 %               1 - Measures data (1996 - 2011 aggregate, 450m, Rignot)
 %               2 - Ian SipleCoast data (2001 - Joughin)
 %               3 - Rignot 450m composite (2017)
-%               4 -  
+%               4 - Mouginot Phase Velocity (2019)
 %               5 - 
 %               6 - 
 %               7 - 
@@ -90,6 +90,17 @@ elseif data_set == 3
     elseif xys == 'y';
         [x y z] = grdread('Antarctic_vy_2017.nc');
     end
+elseif data_set == 4
+     if xys == 's'
+        [x y u] = grdread('antarctic_ice_vel_phase_map_v01.nc','VX',1,'x','y');
+        [x y v] = grdread('antarctic_ice_vel_phase_map_v01.nc','VY',1,'x','y');
+        z = sqrt(u.^2+v.^2);
+        clearvars u v
+    elseif xys == 'x'
+        [x y z] = grdread('antarctic_ice_vel_phase_map_v01.nc','VX',1,'x','y');
+    elseif xys == 'y';
+        [x y z] = grdread('antarctic_ice_vel_phase_map_v01.nc','VY',1,'x','y');
+     end
 end
     
 
@@ -97,7 +108,9 @@ end
 x = double(x);
 y = double(y);
 
+if data_set == 1 | data_set == 2 | data_set == 3
 z = flipud(z);
+end
 
 
     

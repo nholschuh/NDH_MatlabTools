@@ -13,6 +13,8 @@ function [gx,gy,gi] = Antarctic_Imagery(dataset,x1,x2,y1,y2,plotter,colorlock_fl
 %%%                 (3) - Radarsat mosaic of Antarctica (500m)
 %%%                 (3) - Radarsat mosaic of Antarctica (200m)
 %%%                 (4) - REMA Hillshade
+%%%                 (5) - Bedmap2 Hillshade
+%%%                 (6) - Quantized Helm Hillshade
 %%% x1 - This input can take on two types of values:
 %%%         1) A number (either m or km, depending on a later flag) that
 %%%            defines the left boundary of the domain of interest.
@@ -54,6 +56,12 @@ if exist('m0_km1_flag') == 0
 end
 if m0_km1_flag == 1
     scaler = 1/1000;
+    if max(order([x1 x2 y1 y2])) > 3
+        x1 = x1*scaler;
+        x2 = x2*scaler;
+        y1 = y1*scaler;
+        y2 = y2*scaler;
+    end
 else
     scaler = 1;
 end
@@ -148,6 +156,10 @@ if exist('dataset') == 0
     dataset = 0;
 end
 
+if dataset == 6
+    colorlock_flag = 0;
+end
+
 
 %%%%%%%%%%%%%%%%%%%%%%%% Load in the appropriate data
 if dataset == 0
@@ -194,6 +206,13 @@ elseif dataset == 3
     [x y z] = grdread([OnePath,'Satellite_Mosaics\Antarctica_Radarsat_RAMP\amm200.grd']);    
 elseif dataset == 4
     [x y z] = grdread([OnePath,'/Satellite_Mosaics/REMA_Hillshade/REMA_200m_hillshade.nc']); 
+elseif dataset == 5
+    [x y z] = grdread([OnePath,'/Satellite_Mosaics/Antarctica_B2_Hillshade/B2_Surface_Hillshade.nc']);     
+elseif dataset == 6
+    [x y z] = geotiffread_ndh([OnePath,'/Satellite_Mosaics/HELM_QuantizedHillshade/Quantized_SurfaceElev2.tiff']);
+    z = z(:,:,1:3);
+    z(find(z == 0)) = 255;
+    z = flipud(z);
 end
 
 
@@ -223,26 +242,28 @@ xscale = lowx:celldim:highx;
 yscale = lowy:celldim:highy;
 
 %% Corrects for the fact that the y data is backward
-temp = length(y) - y1index + 1;
-y1index = length(y) - y2index + 1;
-y2index = temp;
+
+    temp = length(y) - y1index + 1;
+    y1index = length(y) - y2index + 1;
+    y2index = temp;
+    
+    sz = size(z);
+    zdata = z(sz(1)-fliplr(y1index:y2index)+1,x1index:x2index,:);
 
 %%
-
-sz = size(z);
-zdata = z(sz(1)-fliplr(y1index:y2index)+1,x1index:x2index);
-
 
 
 
 if plotter == 1
 
-    
-    
     if dataset == 0 | dataset == 1
         clims = ([-50 200]);
     elseif dataset == 2 | dataset == 3 | dataset == 4
         clims = ([0 255]);
+    elseif dataset == 5
+        clims = ([70 250]);
+    else
+        clims = ([0 255])
     end
     colormap(gray);
     
@@ -250,22 +271,28 @@ if plotter == 1
         %zdata(find(zdata == 0)) = 255;
         zdata2 = colorlock_mat(zdata,'gray',clims);
     else
+        zdata(find(zdata == 0)) = 255;
         zdata2 = zdata;
     end
     
-    imagesc(xscale,yscale,zdata2)
-    set(gca,'YDir','Normal')
-    hold all
+    imagesc(xscale,yscale,zdata2,'HandleVisibility','off')
+hold all
     
     
     if w_velocity == 1
-        [xv yv s] = A_Velocity(3,'s',x1,x2,y1,y2,0,m0_km1_flag);
+        [xv yv s] = A_Velocity(4,'s',x1,x2,y1,y2,0,m0_km1_flag);
         cs = gmt_to_matlab_colormap(2);
         %cs = magma();
-        s2 = colorlock_mat(s,cs,[0 400]);
-        hh = imagesc(xv,yv,s2);
-        set(hh,'AlphaData',~isnan(s)*0.2)
+        ds_fac = 3;
+        [s2 xv2 yv2] = colorlock_mat(s,cs,[0 100],ds_fac,xv,yv);
+        hh = imagesc(xv2,yv2,s2,'HandleVisibility','off');
+        set(hh,'AlphaData',double(~isnan(s(1:ds_fac:end,1:ds_fac:end)))*0.6)
     end
+    
+    colormap(gray)
+    caxis(clims)
+    set(gca,'YDir','Normal')
+    
     
 end
 

@@ -14,9 +14,33 @@
 *.txt
 *.xy
 *.xyz
+*.asv
+~*
 
-*crewes/*
-*fmcw_Catherine/*
-*Music_Analysis/*
-*TideModels/*
+crewes/
+colormaps/
+CommonData_Searches/
+FD_Model/
+From_Chevron_Work/
+fmcw_Catherine/
+Geophysical_Tools/
+Glaciology_Tools/
+Kriging/
+Music_Analysis/
+NDH_gprMax_Tools/
+NetCDF_Manipulation/
+REMA_Tools/
+tarice_matlab_tools/
+TideModels/
+
+file_readers/Cryo_L2_read.m
+file_readers/read_ArcASCII.m
+file_readers/read_gssi.m
+file_readers/read_gssi_v2.m
+file_readers/vtk*
+
+NDH_CReSIS_Tools/*map*
+NDH_CReSIS_Tools/*swath*
+
+NDH_ICESat2_Tools/Cryo_*
 

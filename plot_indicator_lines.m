@@ -1,4 +1,4 @@
-function plot_indicator_lines(values,horiz1_or_vert2_or_sloped3,color_lines,width,style)
+function plot_indicator_lines(values,horiz1_or_vert2_or_sloped3,color_lines,width,linestyle)
 % (C) Nick Holschuh - Penn State University - 2013 (Nick.Holschuh@gmail.com)
 % Takes a series of points and plots them as horizontal (1) or vertical (2)
 % lines on a pre-existing plot
@@ -26,25 +26,25 @@ end
 if exist('width') == 0;
     width = 1;
 end
-if exist('style') == 0;
-    style = '-';
+if exist('linestyle') == 0;
+    linestyle = '-';
 end
 
 if horiz1_or_vert2_or_sloped3 == 1
     Xs = get(gca,'XLim');
     for i = 1:length(values)
-        plot(Xs,[values(i) values(i)],'Color',color_lines,'LineWidth',width,'LineStyle',style)
+        plot(Xs,[values(i) values(i)],'Color',color_lines,'LineWidth',width,'LineStyle',linestyle)
     end
 elseif horiz1_or_vert2_or_sloped3 == 2
     Ys = get(gca,'YLim');
     for i = 1:length(values)
-        plot([values(i) values(i)],Ys,'Color',color_lines,'LineWidth',width,'LineStyle',style)
+        plot([values(i) values(i)],Ys,'Color',color_lines,'LineWidth',width,'LineStyle',linestyle)
     end    
 elseif horiz1_or_vert2_or_sloped3 == 3
     Xs = get(gca,'XLim');
     Ys = values(1)*(Xs)+values(2);
     for i = 1:length(values)
-        plot(Xs,Ys,'Color',color_lines,'LineWidth',width,'LineStyle',style)
+        plot(Xs,Ys,'Color',color_lines,'LineWidth',width,'LineStyle',linestyle)
     end   
     
 end

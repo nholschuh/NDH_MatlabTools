@@ -41,12 +41,18 @@ function [true_midpoint_z true_p true_L transmit_angle reflect_angle true_time] 
 
 %%%%%%%%%%%%%%%%%% PreSet some Accumulation and Temperature for different
 %%%%%%%%%%%%%%%%%% regions
-if 0 %% Crary Ice Rise
+if 1 %% Crary Ice Rise
     A = 0.1;
     T = -2+273.5;    
-elseif 1
+    if exist('surf_rho') == 0
+    surf_rho = 550;
+    end
+else 
     A = 0.3;
     T = -5+273.5;
+    if exist('surf_rho') == 0
+    surf_rho = 550;
+    end
 end
     
 
@@ -79,7 +85,7 @@ zd = linspace(1,max_depth,round(length(travel_time)/tt_downsample));
 %%%%%% Generate the velocity fields
 domain_z = round(srcz - 50):1:round(max_depth+40);
     % Firn Density from Herron and Langway
-    rho_p = firn_density(domain_z+1,surf_rho,A,T);
+    rho_p = firn_density(domain_z+1,surf_rho/1000,A,T);
 
     % Velocity from density - Robin 1975
     domain_V = cair./(1+0.851*rho_p);
@@ -102,7 +108,7 @@ for i = 1:length(zd)
     [t_temp,p_temp,L_temp,raycoord]=traceray_pp(domain_V,domain_z,srcz,srcz,zd(i),offsets,10,-1,20,1,0,0);
     
     
-    t_final(i,:) = t_temp;
+    t_final(i,:) = real(t_temp);
     p_final(i,:) = p_temp;
     %%%%% This is the radial spredding term, and comes out of two
     %%%%% functions:
@@ -121,7 +127,14 @@ end
 %%%%%% Interpolate back to travel_time;
 for i = 1:length(offsets)  
     %%%% Can only interpolate for points without infinite travel time
-    interp_inds = find(t_final(:,i) ~= Inf);
+    infinds = find(t_final(:,i) == Inf);
+    if length(infinds) == 0
+        si = 1;
+    else
+        si = max(infinds)+1;
+    end
+    interp_inds = si:length(t_final(:,1));
+    
     %%%% find midpointz for travel times as a function of offset
     true_midpoint_z(:,i) = interp1(t_final(interp_inds,i),zd(interp_inds),travel_time);
     true_p(:,i) = interp1(t_final(interp_inds,i),p_final(interp_inds,i),travel_time);

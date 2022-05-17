@@ -17,6 +17,8 @@ function colorbar_ndh(axis_label,nowidth_flag,width_frac,height_frac,bottom_top_
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 
+flipud_flag = 0;
+
 if exist('nowidth_flag') == 0
     nowidth_flag = 1;
 end
@@ -34,7 +36,7 @@ if exist('bottom_top_frac') == 0
 end
 
 if exist('seperation_frac') == 0
-    seperation_frac = 1;
+    seperation_frac = 0;
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Here we get the initial position of the
@@ -43,7 +45,13 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% position of the colorbar
 pos1 = get(gca,'Position');
 ccs = colorbar;
-ylabel(ccs,axis_label)
+
+ylh = ylabel(ccs,axis_label);
+%set(ylh,'BackgroundColor','black','EdgeColor','white');
+ylh_pos = get(ylh,'Position');
+ylh_pos(1) = ylh_pos(1)+0.5;
+set(ylh,'Position',ylh_pos);
+
 pos2 = get(gca,'Position');
 
 cs = get(gcf,'Children');
@@ -82,5 +90,8 @@ cpos_final(4) = cpos_final(4)*height_frac;
 
 set(cs(c_num),'Position',cpos_final)
 
+if flipud_flag == 1
+    set(cs(c_num),'YDir','reverse')
+end
 
 end

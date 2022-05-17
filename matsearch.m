@@ -16,7 +16,9 @@ function [zfinal matinds gridinds dist_final]= matsearch(inputvec,gridx,gridy,gr
 %%% The outputs are as follows:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % zfinal - The extracted value at points defined by inputvec
-% gridinds - the index in the grid associated with the data points
+% matinds - the index in the grid associated with the data
+% gridinds - the row and column in the grid associated with the data
+% dist_final - the distance between the input point and the grid index
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Takes all points provided in the first two columns of the inputvec and returns the value at that location in the grid. grid provided as a string containing the address of the grid file relative to the pwd.
 
@@ -104,9 +106,9 @@ if min(size(gridx)) == 1
         gridinds = [ysearch xsearch];
         
     elseif four_point > 0
-        gridinds(:,1) = find_nearest(gridy,inputvec(:,2));
-        gridinds(:,2) = find_nearest(gridx,inputvec(:,1));
-        zfinal = interp2(gridx,gridy,gridz,inputvec(:,1),inputvec(:,2));
+        gridinds(:,1) = find_nearest(gridy,y);
+        gridinds(:,2) = find_nearest(gridx,x);
+        zfinal = interp2(gridx,gridy,gridz,x,y);
     end
     
     

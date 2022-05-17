@@ -92,6 +92,9 @@ elseif data_set == 10
     [x y z] = grdread('Davies_GeothermalFlux.nc');
 elseif data_set == 11   
     [x y z] = grdread('Martos_2018_GeothermalFlux.nc');
+elseif data_set == 12
+    [x y z] = geotiffread_ndh([OnePath,'Research_Projects/34_IceSat2/Tex_Writeup_IS1IS2_Comparison/ICESat2_dhdt_Manuscript/IS1_IS2_GrIS_dHdt_2003_2019_r05KM.tif']);
+        z = flipud(z);
 end  
 
 

@@ -24,6 +24,8 @@ end
 
 if length(varargin{3}) == 1 & length(varargin{3}) ~= length(varargin{1})
     set(ph,'UserData',repmat(varargin{3},length(varargin{1}),1));
+elseif length(varargin{3}) == length(varargin{1}) & length(varargin{3}(:,1)) < length(varargin{3}(1,:))
+    set(ph,'UserData',varargin{3}');
 else
     set(ph,'UserData',varargin{3});
 end
@@ -60,6 +62,7 @@ elseif iscell(obj.Host.UserData) == 1
 else
     output_txt(end+1) = {[' ']};
     for i = 1:length(obj.Host.UserData(1,:));
+        print(obj.Host.UserData(1,:))
         output_txt(end+1) = {['Value',num2str(i),': ',num2str(obj.Host.UserData(marker_ind,i))]};
     end
 end

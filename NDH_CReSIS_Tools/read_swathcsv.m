@@ -57,15 +57,22 @@ bzt = [surfdata(:,3)];
 %     ei = length(bxt);
 % end
 
-dbx = 64;
 
+for i = [54 64 85 40];
+    try
+        dbx = i; %% This value is used for the thwaites data
+        
+        %%%%%%%%%%%%%%%%%%% Here we reshape the result into a matrix, including the
+        %%%%%%%%%%%%%%%%%%% full data volume
+        bxt2 = reshape(bxt,dbx,length(bxt)/dbx);
+        byt2 = reshape(byt,dbx,length(byt)/dbx);
+        bzt2 = reshape(bzt,dbx,length(bzt)/dbx);
+        break
+    catch
+        
+    end
+end
 
-
-%%%%%%%%%%%%%%%%%%% Here we reshape the result into a matrix, including the 
-%%%%%%%%%%%%%%%%%%% full data volume
-bxt2 = reshape(bxt,dbx,length(bxt)/dbx);
-byt2 = reshape(byt,dbx,length(byt)/dbx);
-bzt2 = reshape(bzt,dbx,length(bzt)/dbx);
 
 
 si = 1;
@@ -93,11 +100,14 @@ out_bearing = [bs(1,:); bs];
 %%%%%%%%%%%%%%%%%%%% This allows you to set start and end indecies, if you
 %%%%%%%%%%%%%%%%%%%% are trying to remove turns
 if length(endtrim) == 0
-ss = 1;
-ee = length(bxt2(1,:));
+    ss = 1;
+    ee = length(bxt2(1,:));
+elseif length(endtrim) == 1
+    ss = endtrim(1);
+    ee = length(bxt2(1,:))-endtrim(1);    
 else
-   ss = endtrim(1);
-   ee = length(bxt2(1,:))-endtrim(2);
+    ss = endtrim(1);
+    ee = length(bxt2(1,:))-endtrim(2);
 end
 
 

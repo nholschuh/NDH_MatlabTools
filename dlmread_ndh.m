@@ -1,4 +1,4 @@
-function [data] = dlmread_ndh(filename,delimit_opt)
+function [data] = dlmread_ndh(filename,delimit_opt,forcefieldnames)
 % (C) Nick Holschuh - UW - 2017 (Nick.Holschuh@gmail.com)
 % Reads a text file created by dlmwrite_ndh
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -13,12 +13,18 @@ if exist('delimit_opt') == 0;
     delimit_opt = '\t';
 end
 
-fid = fopen(filename);
-tl = fgets(fid);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Here's where we generate the field names if
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% available
+
+
+if exist('forcefieldnames') == 0
+
+fid = fopen(filename);
+tl = fgets(fid);
+
+
 
 
 fclose(fid);
@@ -59,7 +65,15 @@ if isstrprop(tl(1),'digit') == 1 | (tl(1) == '-' & isstrprop(tl(2),'digit') == 1
         field_names{i} = ['field_',num2str(i)];
     end
 end
+else
+   field_names = forcefieldnames;
+   field_counter = length(field_names);
+   notes_flag = 0;
+end
 
+for i = 1:length(field_names)
+    field_names{i} = remove_illegalcharacters(field_names{i},'()');
+end
 
 
 

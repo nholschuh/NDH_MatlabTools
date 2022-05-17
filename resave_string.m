@@ -56,7 +56,7 @@ for i = 1:length(additional_vars)
     save_string = [save_string,additional_vars{i},''','''];
 end
 
-save_string = [save_string(1:end-2),');'];
+save_string = [save_string(1:end-3),'-v7.3'');'];
 
 end
 

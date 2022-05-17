@@ -67,7 +67,7 @@ end
 phi(end+1) = 0;
 theta(end+1) = 0;
 theta_c = asin(1/n);
-efield0_or_poynting1 = 1;
+efield0_or_poynting1 = 0;
 
 
 for i = 1:length(phi)
@@ -120,6 +120,7 @@ for i = 1:length(phi)
     end
     
 end
+
 
 db_correction = [10*log10(E(1:end-1,3)) 10*log10(E(end,3))-10*log10(E(1:end-1,3))];
 db_correction = [E(1:end-1,1:2) db_correction];

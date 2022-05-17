@@ -1,4 +1,4 @@
-function [output nx ny] = regrid(xaxis,yaxis,data,nx,ny,interp_type);
+function [nx ny output outindsx outindsy] = regrid(xaxis,yaxis,data,nx,ny,subsample_largergrid,interp_type);
 % (C) Nick Holschuh - Penn State University - 2016 (Nick.Holschuh@gmail.com)
 % This does a 2d interpolation for gridded data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -23,6 +23,9 @@ function [output nx ny] = regrid(xaxis,yaxis,data,nx,ny,interp_type);
 %           the nyquist frequency of the target data (sample rate provided in ny)
 %    ny - center frequency of the radar data.
 %
+% subsample_largergrid - flag, 0 or 1, to indicate if you want the
+%   regridded product to only take the samples of the larger grid that
+%   overlap.
 % interp_type - accepts 'spline', 'linear','nearest','next','cubic'
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -35,17 +38,27 @@ else
     matflag = 0;
 end
 
-if exist('interp_type') == 0
-    interp_type = 'spline';
+if exist('subsample_largergrid') == 0
+    subsample_largergrid = 0;
 end
 
+if exist('interp_type') == 0
+    interp_type = 'linear';
+end
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% This only maters in interpolating radar data
+%%%%%%%%%%%%%%%%%%%%%%%%%%% specifically
 if length(nx) == 1
     % This automatically regrids the data to the finer spacing of the two
     % source spacings
     xstep = xaxis(2)-xaxis(1);
     ystep = yaxis(2)-yaxis(1);
     
-    if nx == 1
+    %%%%%%%%%%%%%%%%%%%%%%%% This was for interpolating radargrams,
+    %%%%%%%%%%%%%%%%%%%%%%%% specifically.
+    if nx == 1 & ystep < 1e-5
         cice_import
         ystep = ystep*cice/2;
     end
@@ -69,7 +82,7 @@ if length(nx) == 1
         %ystep = (1/f)/20
         ystep = (1/f)/20;
         ny_temp2 = yaxis(1):ystep:yaxis(end);
-        nx_temp2 = xaxis(1):ystep*cice/2:xaxis(end);
+        nx_temp2 = xaxis(1):ystep:xaxis(end);
         
         if length(nx_temp2) > length(nx_temp) & length(ny_temp2) > length(ny_temp)
         else
@@ -83,20 +96,35 @@ if length(nx) == 1
 end
 
 if skipinterp == 0
+    
     if matflag == 0
         [y_0 x_0] = ndgrid(yaxis,xaxis);
+        
+        if subsample_largergrid == 1
+            outindsx = find_nearest(nx,min(xaxis)):find_nearest(nx,max(xaxis));
+            outindsy = find_nearest(ny,min(yaxis)):find_nearest(ny,max(yaxis));
+            nx = nx(outindsx);
+            ny = ny(outindsy);
+        else
+           outindsx = 1:length(nx);
+           outindsy = 1:length(ny);
+        end
+        
         [interp_y interp_x] = ndgrid(ny,nx);
     else
         y_0 = yaxis;
         x_0 = xaxis;
         interp_y = ny;
         interp_x = nx;
+        
+        outindsx = NaN;
+        outindsy = NaN;
     end
     
     A = griddedInterpolant(y_0,x_0,data,interp_type);
     output = A(interp_y,interp_x);
     if min(min(isnan(output))) == 1
-        A = griddedInterpolant(y_0,x_0,data,'cubic');
+        A = griddedInterpolant(y_0,x_0,data,'linear');
         output = A(interp_y,interp_x);
     end
 else

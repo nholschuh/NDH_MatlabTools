@@ -1,6 +1,9 @@
 function result = interpNaN(series)
 %% This function takes a series that includes NaNs, and interpolates over the NaN sections
 
+interp_method = 'linear';
+interp_method = 'nearest';
+
 result = series;
 axis_vals = 1:length(series);
 
@@ -24,7 +27,7 @@ if length(replace_ind) ~= 0 & length(replace_ind) ~= length(series)
         result(1:replace_ind(interp_cutoff(2))+2) = interp1(axis_vals(replace_ind(interp_cutoff(2)))+1:axis_vals(replace_ind(interp_cutoff(2)))+2, ...
             series(replace_ind(interp_cutoff(2))+1:replace_ind(interp_cutoff(2))+2), ...
             axis_vals(1:replace_ind(interp_cutoff(2))+2),...
-            'linear','extrap');
+            interp_method,'extrap');
         starter = 2;
     else
         starter = 1;
@@ -35,7 +38,7 @@ if length(replace_ind) ~= 0 & length(replace_ind) ~= length(series)
         result(replace_ind(interp_cutoff(i)+1)-1:replace_ind(interp_cutoff(i+1))+1) = interp1([axis_vals(replace_ind(interp_cutoff(i)+1)-1) axis_vals(replace_ind(interp_cutoff(i+1))+1)], ...
             [series(replace_ind(interp_cutoff(i)+1)-1) series(replace_ind(interp_cutoff(i+1))+1)], ...
             axis_vals(replace_ind(interp_cutoff(i)+1)-1:replace_ind(interp_cutoff(i+1))+1), ...
-            'linear');
+            interp_method);
     end
     
     % Accomodates NaNs at the end of the series
@@ -43,7 +46,7 @@ if length(replace_ind) ~= 0 & length(replace_ind) ~= length(series)
         result(replace_ind(interp_cutoff(end)+1)-2:end) = interp1(axis_vals(replace_ind(interp_cutoff(end)+1)-2:replace_ind(interp_cutoff(end)+1)-1), ...
             series(replace_ind(interp_cutoff(end)+1)-2:replace_ind(interp_cutoff(end)+1)-1), ...
             axis_vals(replace_ind(interp_cutoff(end)+1)-2:end),...
-            'linear','extrap');
+            interp_method,'extrap');
     end
     
     

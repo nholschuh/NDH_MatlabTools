@@ -22,12 +22,13 @@ function location = particle_tracking(startx,starty,x,y,u,v,distances,dx,plotter
 % The outputs are:
 %
 % location - is a structure where location{i}(:,1) is the ith particles x
-% position, and location{i}(:,2) is the ith particles y position
+% position, and location{i}(:,2) is the ith particles y position.
+% location{i}(:,3) is the total time spent propagating.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-particle_tracking_method = 0;
+particle_tracking_method = 1;
 
 %%%%%% This is for testing - method 0 iterates over the points and the
 %%%%%% steps, method 1 only interates over the steps;
@@ -94,6 +95,8 @@ end
 %%%%% outside the particle tracking grid:
 
 if vec_or_mesh == 0
+    x_orig = x;
+    y_orig = y;
     [x y] = meshgrid(x,y);
     et = combvec(x,y(1))';
     eb = combvec(x,y(end))';
@@ -206,8 +209,8 @@ end
      search_inds = find(isnan(location_x(:,1)) == 0);
 
      for i = 1:steps
-         u_temp = matsearch([location_x(search_inds,i) location_y(search_inds,i)],x,y,u,2);
-         v_temp = matsearch([location_x(search_inds,i) location_y(search_inds,i)],x,y,v,2);
+         u_temp = matsearch([location_x(search_inds,i) location_y(search_inds,i)],x_orig,y_orig,u,2);
+         v_temp = matsearch([location_x(search_inds,i) location_y(search_inds,i)],x_orig,y_orig,v,2);
          
          unitu = u_temp./((u_temp.^2+v_temp.^2).^0.5)*dx;
          unitv = v_temp./((u_temp.^2+v_temp.^2).^0.5)*dx;

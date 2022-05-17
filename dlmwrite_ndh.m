@@ -18,7 +18,7 @@ if exist('delimit_opt') == 0;
     delimit_opt = '\t';
 end
 if exist('precision_opt') == 0;
-    precision_opt = 5;
+    precision_opt = 8;
 end
 
 if isstruct(mat_in) == 1
@@ -76,16 +76,17 @@ if exist('notes_field') == 1
         fprintf(fid2,[delimit_opt,'[[',notes_field{i},']]\n']);
     end
     fclose(fid);
-    fclose(fid2);
 else
     
-   copyfile(sname1,savename,'f')
-   
-end
+    copyfile(sname1,savename,'f')
     
+end
+
+fclose(fid2);
+
 delete(sname1);
 
-    
+
     
 
 

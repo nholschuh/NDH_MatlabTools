@@ -1,4 +1,4 @@
-function quiver_2d(x,y,u,v,x_axis,scale,color_input)
+function quiver_2d(x,y,u,v,x_axis,scale,color_input,downsample_rate)
 % (C) Nick Holschuh - University of Washington - 2016 (Nick.Holschuh@gmail.com)
 % This takes velocity values taken for individual traces of a 2D radar
 % profile, computes the component in-to and out-of the page, and plots
@@ -77,8 +77,8 @@ new_uv(end+1,:) = [10^arrow_size 0];
 new_uv(:,2) = new_uv(:,2)*aspect_ratio;
 
 plot(x_axis(1:end-1),y_axis(1:end-1),'Color',[0.8 0.8 0.8],'LineWidth',1)
-quiver(x_axis,y_axis,new_uv(:,1),new_uv(:,2),scale, ...
-    'Color',color_input,'LineWidth',2);
+quiver(x_axis(1:downsample_rate:end),y_axis(1:downsample_rate:end),new_uv(1:downsample_rate:end,1),new_uv(1:downsample_rate:end,2),scale, ...
+    'Color',color_input,'LineWidth',1,'MaxHeadSize',0.005);
 text(x_axis(1)+(xrange(2)-xrange(1))*0.05,((yrange(2)-yrange(1))*0.05+yrange(1)),[num2str(10^arrow_size),' m/a'],'Color','white');
 
 

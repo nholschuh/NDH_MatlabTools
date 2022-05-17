@@ -1,4 +1,4 @@
-function output = colorlock_mat(input,colormap_str,colorrange);
+function [output ox oy] = colorlock_mat(input,colormap_str,colorrange,downsample,ix,iy);
 % (C) Nick Holschuh - Penn State University - 2016 (Nick.Holschuh@gmail.com)
 % Converts an NxMx1 matrix to an RGB NxMx3 matrix with a fixed colormap,
 % either provided using the colormap_str and colorrange inputs or using the
@@ -18,11 +18,19 @@ function output = colorlock_mat(input,colormap_str,colorrange);
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-nan_ind = find(isnan(input));
-inf_ind = find(input == Inf);
-input(inf_ind) = max(max(input(find(input ~= Inf))));
-n_inf_ind = find(input == -Inf);
-input(n_inf_ind) = min(min(input(find(input ~= -Inf))));
+if exist('downsample') ~= 1
+    downsample = 1;
+    ix = 1:length(input(1,:));
+    iy = 1:length(input(:,1));
+end
+
+input = input(1:downsample:end,1:downsample:end);
+ox = ix(1:downsample:end);
+oy = iy(1:downsample:end);
+
+
+input(find(isnan(input))) = max(max(input(find(input ~= Inf))));
+input(find(input == Inf)) = min(min(input(find(input ~= -Inf))));
 
 if exist('colormap_str') == 0
     cmap = colormap;
@@ -62,13 +70,13 @@ t3 = output(:,:,3);
 %%%%%%% White_or_NaN?
 white_or_nan = 1;
 if white_or_nan == 0
-t1(nan_ind) = 1;
-t2(nan_ind) = 1;
-t3(nan_ind) = 1;
+    t1(find(isnan(input))) = 1;
+    t2(find(isnan(input))) = 1;
+    t3(find(isnan(input))) = 1;
 else
-t1(nan_ind) = NaN;
-t2(nan_ind) = NaN;
-t3(nan_ind) = NaN;    
+    t1(find(isnan(input))) = NaN;
+    t2(find(isnan(input))) = NaN;
+    t3(find(isnan(input))) = NaN;
 end
 output(:,:,1) = t1;
 output(:,:,2) = t2;

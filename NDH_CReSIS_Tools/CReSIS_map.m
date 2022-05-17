@@ -47,7 +47,8 @@ end
         '2013_P3',...
         '2014_DC8',...
         '2016_DC8',...
-        '2017_Polar6'};
+        '2017_Polar6', ...
+        '2019_Ground'};
 
 %%%%%%%%%% Here we provide an opportunity to select the flight season
 if exist('source_flight') == 0 || max(source_flight == 0) == 1
@@ -58,7 +59,7 @@ elseif length(source_flight) == 1
 end
 
 %%%%%%%%% Load in the aggregated Data Set
-source_file = [OnePath,'Matlab_Code/NDH_tools/CommonData_Searches/CReSIS_Data/Antarctica/'];
+source_file = [OnePath,'Matlab_Code/NDH_Tools/CommonData_Searches/CReSIS_Data/Antarctica/'];
 source_file = [source_file,source_flight,'.mat'];
 load(source_file)
 disp('Loaded Source File')
@@ -133,7 +134,8 @@ elseif map_type == 3
     start_line_ind(length(start_line_ind)+1) = length(new_data(:,1));
     colorline = jet(total_lines);
     x_stops = linspace(0,1,total_lines+1);
-    
+else
+    error('Invalid Map Type (first argument): 1/season, 2/day, 3/seg')
 end
 
 
@@ -152,6 +154,16 @@ elseif zoom_type == 1
     miny = min(new_data(:,2))-1e5;
     maxy = max(new_data(:,2))+1e5;    
 end
+
+% %%%%%%%%% This was added to force just Thwaites imagery
+%  
+% xs = [-1700000 -1000000];
+% ys = [-700000 -200000];
+% minx = xs(1);
+% maxx = xs(2);
+% miny = ys(1);
+% maxy = ys(2);
+
 
     skipper = 50;
     
@@ -251,6 +263,8 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% The Writing out of the file
 subplot(8,1,1:7)
+
+if exist('xs') == 0
     if zoom_type == 0
         xs = [min(Data_Vals2(:,1))-1e5 max(Data_Vals2(:,1))+1e5];
         ys = [min(Data_Vals2(:,2))-1e5 max(Data_Vals2(:,2))+1e5];
@@ -258,14 +272,15 @@ subplot(8,1,1:7)
         xs = [min(new_data(:,1))-1e5 max(new_data(:,1))+1e5];
         ys = [min(new_data(:,2))-1e5 max(new_data(:,2))+1e5];        
     end
+end
         title(true_name(output_name))
         xlim(xs)
         ylim(ys)
         NDH_Style()
         location_map(xs(1),xs(2),ys(1),ys(2),1,0,0,0.5)
-pause(1)
+    pause(1)
 if length(output_name) > 1 & output_name ~= 0
-pdf_ndh(output_name)
+    pdf_ndh(output_name,0,0,1)
 end
 
 end

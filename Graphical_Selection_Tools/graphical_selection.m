@@ -9,7 +9,11 @@ function [vertices output_inds associated_vals] = graphical_selection(line_param
 %               2: red star
 %               3: blue star connected with line
 %
-% locking_flag -
+% locking_flag - 0: free picking
+%                1: locks to last plotted line. See picker notes below
+% 
+% additional_input_prompt - This allows you to add values associated with
+% the picked vertices. I don't exactly remember what this is for.
 %
 %%%%%%%%%%%%%%%%%%
 %%%% Picker Notes

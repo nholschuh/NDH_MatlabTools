@@ -80,7 +80,14 @@ for ii = 1:Nos
     coordMat = reshape(coordMat,3,m*n/3)';
     
     % define polygon in clockwise direction, and terminate
-    [Lat, Lon] = poly2ccw(coordMat(:,2),coordMat(:,1));
+    
+%    try
+        [Lat, Lon] = poly2ccw(coordMat(:,2),coordMat(:,1));
+%     catch
+%         Lat = coordMat(:,2);
+%         Lon = coordMat(:,1);
+%     end
+        
     if geom==3
         Lon = [Lon;NaN];
         Lat = [Lat;NaN];

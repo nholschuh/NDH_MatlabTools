@@ -34,6 +34,14 @@ elseif data_set == 2
     elseif xys == 'y';
         y1 = grdsearch(inputvec,'Antarctic_2001_Ian_vy.nc');
     end
+elseif data_set == 3
+    if xys == 's'
+        y1 = grdsearch(inputvec,'Antarctic_speed_2017.nc');
+    elseif xys == 'x'
+        y1 = grdsearch(inputvec,'Antarctic_vx_2017.nc');
+    elseif xys == 'y';
+        y1 = grdsearch(inputvec,'Antarctic_vy_2017.nc');
+    end
 end
 
 

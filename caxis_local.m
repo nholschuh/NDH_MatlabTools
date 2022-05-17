@@ -29,7 +29,7 @@ yl = get(gca,'ylim');
 
 present_plots = get(gca,'Children');
 
-
+scatter_flag = 0;
 for i = 1:length(present_plots)
     
     if length(present_plots(i).Type) == 5
@@ -50,20 +50,25 @@ for i = 1:length(present_plots)
             break
         end
     elseif length(present_plots(i).Type) == 7
+        copts = [Inf -Inf];
+        scatter_flag = 1;
         if present_plots(i).Type == 'scatter'
             di = find(present_plots(i).XData > xl(1) & present_plots(i).XData < xl(2) & ...
                 present_plots(i).YData > yl(1) & present_plots(i).YData < yl(2));
-            
-            if length(di) > 0
-                caxis([min(present_plots(i).CData(di)) max(present_plots(i).CData(di))]);
-            end            
+                copts = [min([copts(1) min(present_plots(i).CData(di))]) ...
+                    max([copts(2) max(present_plots(i).CData(di))])];
+         
             
         elseif present_plots(i).Type == 'surface'
             ri = find(present_plots(i).YData > yl(1) & present_plots(i).YData < yl(2));
             ci = find(present_plots(i).XData > xl(1) & present_plots(i).XData < xl(2));
-            caxis([min(min(present_plots(i).CData(ri,ci))) max(max(present_plots(i).CData(ri,ci)))]);
+            copts = [min([copts(1) min(min(present_plots(i).CData(ri,ci)))]) ...
+                    max([copts(2) max(max(present_plots(i).CData(ri,ci)))])];
         end
     end
 end
 
+if scatter_flag == 1
+   caxis(copts)
+end
 

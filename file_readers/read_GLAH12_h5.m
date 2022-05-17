@@ -27,6 +27,10 @@ if exist('subset_flag') == 0
     countnum = 0;
 end
 
+if exist('subset_poly') == 0
+    subset_poly = 0;
+end
+
 if subset_flag == Inf | subset_flag == 2
     name_comp = 1;
 else
@@ -40,6 +44,7 @@ if subset_flag == 1 | subset_flag == 2
     subset_group = 1;
     lat40 = h5read(h5_file,['/Data_40HZ/Geolocation/d_lat']);
     lon40 = h5read(h5_file,['/Data_40HZ/Geolocation/d_lon']);
+    qual40 = h5read(h5_file,['/Data_40HZ/Quality/elev_use_flg']);
     
     lat1 = h5read(h5_file,['/Data_1HZ/Geolocation/d_lat']);
     lon1 = h5read(h5_file,['/Data_1HZ/Geolocation/d_lon']);
@@ -47,11 +52,19 @@ if subset_flag == 1 | subset_flag == 2
     length_40 = length(lat40);
     length_1 = length(lon1);
     
-    if max(subset_poly(:,1)) < 0
+    ki40 = find(qual40 == 0);
+    
+    
+    if subset_poly == 0
+        subset_poly = [0 0; 0 90; 0 180; 0 270; 0 360];
+    end
+    
+    if max(lat40(ki40)) < 0
         ant_flag = 1;
     else
         ant_flag = 0;
     end
+    
     
     if ant_flag == 1
         [x40 y40] = polarstereo_fwd(lat40,lon40,0);
@@ -79,6 +92,7 @@ end
 %%%%%%%%%%%%%%% This extracts the attributs of the hd5 file itself, and
 %%%%%%%%%%%%%%% saves it to the object GranuleMeta
 for i = 1:length(I.Attributes)
+    I.Attributes(i).Name = remove_illegalcharacters(I.Attributes(i).Name,' ');
     wrt_str = ['output.GranuleMeta.',I.Attributes(i).Name,' = I.Attributes(i).Value;'];
     eval(wrt_str)
 end
@@ -101,6 +115,7 @@ for i = 1:length(I.Groups)
     %%%%% Loop through the attributes and save them into the meta
     %%%%% substructure
     for j = 1:length(I.Groups(i).Attributes)
+        I.Groups(i).Attributes(j).Name = remove_illegalcharacters(I.Groups(i).Attributes(j).Name,' ');
         wrt_str = ['output',rn3,'Meta.',I.Groups(i).Attributes(j).Name,' = I.Groups(i).Attributes(j).Value;'];
         eval(wrt_str)
     end
@@ -176,6 +191,7 @@ for i = 1:length(I.Groups)
         %%%%% Loop through the attributes and save them into the meta
         %%%%% substructure
         for k = 1:length(I.Groups(i).Groups(j).Attributes)
+            I.Groups(i).Groups(j).Attributes(k).Name = remove_illegalcharacters(I.Groups(i).Groups(j).Attributes(k).Name,' ');
             wrt_str = ['output',rn3,'Meta.',I.Groups(i).Groups(j).Attributes(k).Name,' = I.Groups(i).Groups(j).Attributes(k).Value;'];
             eval(wrt_str)
         end
@@ -253,6 +269,7 @@ for i = 1:length(I.Groups)
                     if max(rn3 == '-') == 1
                         rn3(find(rn3 == '-')) = [];
                     end
+                    I.Groups(i).Groups(j).Groups(k).Attributes(l).Name = remove_illegalcharacters(I.Groups(i).Groups(j).Groups(k).Attributes(l).Name,' ');
                     wrt_str = ['output',rn3,'Meta.',I.Groups(i).Groups(j).Groups(k).Attributes(l).Name,' = I.Groups(i).Groups(j).Groups(k).Attributes(l).Value;'];
                     eval(wrt_str)
                 end

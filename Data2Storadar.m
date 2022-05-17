@@ -1,4 +1,4 @@
-function Data2Storadar(Data,Time,Latitude,Longitude,outputfile,elev,datatype)
+function Data2Storadar(Data,Time,Latitude,Longitude,outputfile,elev,datatype,x_coord,y_coord)
 % (C) Nick Holschuh - University of Washington - 2016 (Nick.Holschuh@gmail.com)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -54,10 +54,10 @@ ch_proc = 99;
 chan = 2;
 chdat = 10;
 decday = ones(length(Data(1,:)),1)*datenum(date);
-if exist('Latitude') == 1
+if exist('Latitude') == 1 & exist('x_coord') == 0
     [x_coord y_coord] = polarstereo_fwd(Latitude,Longitude);
-    dist = distance_vector(x_coord,y_coord);
 end
+dist = distance_vector(x_coord,y_coord,0);
 
 dist = 1:(length(Data(1,:))-startdepth+1);
 dt = Time(2) - Time(1);

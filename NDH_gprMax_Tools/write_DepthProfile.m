@@ -7,7 +7,7 @@ function write_DepthProfile(filename,domain_size,spacing,surface_density,firn_de
 % filename - the name of the file to write or output to
 % domain_size - the size, in m, for the [x y z] dimensions
 % spacing - the incremental spacing for the grid, [dx dy dz]
-% surface density - in g/cc
+% surface density - in kg/m3
 % firn_depth - the maximum depth to the glacial ice
 % layers - the number of firn layers to include in the model
 % include_geometryout - this includes a flag to write a vti file of the
@@ -17,7 +17,7 @@ function write_DepthProfile(filename,domain_size,spacing,surface_density,firn_de
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 
-freespace_thickness = 15;
+freespace_thickness = 50;
 
 if exist('write0_or_append1') == 0
     write0_or_append1 = 0;
@@ -40,6 +40,8 @@ fprintf(fid,'#dx_dy_dz: %.3f %.3f %.3f \n',spacing);
 
 cice_import;
 total_time = round_to(domain_size(3)*2/cice,1e-9);
+
+%%%%%%%%%%%%%% Need to include a stability test here!
 
 fprintf(fid,'#time_window: %f \n',total_time);
 fprintf(fid,'\n',[]);
@@ -68,7 +70,7 @@ end
 %%
 %%%%%%%% Step 1 - Derive the depth-density profile
 
-[firn_info] = firn_profile(0,0,surface_density*1000);
+[firn_info] = firn_profile(0,0,surface_density);
 cutoff = find_nearest(firn_info(:,2),916.9);
 firn_info = firn_info(1:cutoff,:);
 firn_info(:,1) = firn_info(:,1)/firn_info(end,1)*firn_depth;

@@ -13,11 +13,14 @@ function correction = focusing_radioglaciology(H,h,v0,v1,p)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 
+cice_import;
 
 theta1 = asin(p*v0);
 theta2 = asin(p*v1);
 
-r_over_r = ((H./h) + 1)./((H./h) + (tan(theta2)./tan(theta1)));
+%r_over_r = ((H./h) + 1)./((H./h) + (tan(theta2)./tan(theta1)));
+%%%%%%% small angle approximation
+r_over_r = ((H./h) + 1)./((H./h) + (cice/cair));
 
 correction = lp(r_over_r.^2);
 

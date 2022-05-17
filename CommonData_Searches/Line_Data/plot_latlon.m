@@ -1,4 +1,4 @@
-function plot_latlon(ant0_or_gre1,primary_lat_lon,secondary_lat_lon,latrange,lonrange,x1,x2,y1,y2)
+function plot_latlon(ant0_or_gre1,primary_lat_lon,secondary_lat_lon,latrange,lonrange,x1,x2,y1,y2,wmeta_flag)
 % (C) Nick Holschuh - U. of Washington - 2018 (Nick.Holschuh@gmail.com)
 % This function plots regular latitude and longitude lines on a given
 % stereographic map
@@ -7,8 +7,8 @@ function plot_latlon(ant0_or_gre1,primary_lat_lon,secondary_lat_lon,latrange,lon
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % ant0_or_gre1 - either [0] for Antarctica or 1 for Greenland
-% primary_lat_lon - The lat/lon spacing for the primary plot (black)
-% secondary_lat_lon - The lat/lon spacing for the secondary plot (grey)
+% primary_lat_lon - nx2 The lat/lon spacing for the primary plot (black)
+% secondary_lat_lon - nx2 The lat/lon spacing for the secondary plot (grey)
 % latrange - 
 % lonrange - 
 % x1 - This input can take on two types of values:
@@ -19,6 +19,8 @@ function plot_latlon(ant0_or_gre1,primary_lat_lon,secondary_lat_lon,latrange,lon
 % x2 - The right boundary of the domain (ignored if string for x1)
 % y1 - The bottom boundary of the domain (ignored if string for x1)
 % y2 - The top boundary of the domain (ignored if string for x1)
+% wmeta_flag - choose whether or not to plot them with the ability to
+% select the line to get the latitude/longitude value.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % The outputs are as follows:
@@ -38,6 +40,9 @@ if exist('latrange') == 0
     latrange = [-90 90];
     lonrange = [-360 360];
 end
+if exist('wmeta_flag') == 0
+    wmeta_flag = 1;
+end
 
 if exist('x1') == 0
     x1 = -3e6;
@@ -56,15 +61,34 @@ if x1 == 0 & x2 == 0
 end
 
 within_box = box_from_corners(x1,x2,y1,y2);
+xdiff = x2-x2;
+ydiff = y2-y1;
+
+if xdiff < 50000 | ydiff < 50000
+    data_type = 1;
+else
+    data_type = 2;
+end
+
 
 if ant0_or_gre1 == 0
-    load LatLon_xy_Antarctica.mat
+    if data_type == 1
+        load LatLon_xy_highres_Antarctica.mat
+    else
+        load LatLon_xy_Antarctica.mat
+    end
+    
     if exist('primary_lat_lon') == 0
     primary_lat_lon = [30 30];
     secondary_lat_lon = [10 5];
     end
 else
-    load LatLon_xy_Greenland.mat
+    if data_type == 1
+        load LatLon_xy_highres_Greenland.mat
+    else
+        load LatLon_xy_Greenland.mat
+    end
+    
     if exist('primary_lat_lon') == 0
     primary_lat_lon = [30 10];
     secondary_lat_lon = [10 5];
@@ -87,10 +111,19 @@ for i = 1:length(lat_linesx)
     end
     
     inds = find(within(lat_linesx{i},lat_linesy{i},within_box(:,1),within_box(:,2)));
-    if lattype(i) == 2
-        plot(lat_linesx{i}(inds),lat_linesy{i}(inds),'Color','black')
-    elseif lattype(i) == 1
-        plot(lat_linesx{i}(inds),lat_linesy{i}(inds),'Color',secondary_color)
+    
+    if wmeta_flag == 0
+        if lattype(i) == 2
+            plot(lat_linesx{i}(inds),lat_linesy{i}(inds),'Color','black')
+        elseif lattype(i) == 1
+            plot(lat_linesx{i}(inds),lat_linesy{i}(inds),'Color',secondary_color)
+        end
+    else
+        if lattype(i) == 2
+            plot_wmeta(lat_linesx{i}(inds),lat_linesy{i}(inds),lat_opts(i),'Color','black');
+        elseif lattype(i) == 1
+            plot_wmeta(lat_linesx{i}(inds),lat_linesy{i}(inds),lat_opts(i),'Color',secondary_color);
+        end        
     end
 end
 
@@ -109,11 +142,19 @@ for i = 1:length(lon_linesx)
     end
     
     inds = find(within(lon_linesx{i},lon_linesy{i},within_box(:,1),within_box(:,2)));
-    if lontype(i) == 2
-        plot(lon_linesx{i}(inds),lon_linesy{i}(inds),'Color','black')
-    elseif lontype(i) == 1
-        plot(lon_linesx{i}(inds),lon_linesy{i}(inds),'Color',secondary_color)
-    end    
+    if wmeta_flag == 0
+        if lontype(i) == 2
+            plot(lon_linesx{i}(inds),lon_linesy{i}(inds),'Color','black')
+        elseif lontype(i) == 1
+            plot(lon_linesx{i}(inds),lon_linesy{i}(inds),'Color',secondary_color)
+        end
+    else
+        if lontype(i) == 2
+            plot_wmeta(lon_linesx{i}(inds),lon_linesy{i}(inds),lon_opts(i),'Color','black');
+        elseif lontype(i) == 1
+            plot_wmeta(lon_linesx{i}(inds),lon_linesy{i}(inds),lon_opts(i),'Color',secondary_color);
+        end
+    end
 end
 
 end

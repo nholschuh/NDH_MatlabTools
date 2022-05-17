@@ -47,7 +47,7 @@ if full_or_half_flag == 0
 end
 
 if continuous_flag == 1
-    angle = [angle; angle(end)];
+    angle = [angle(1); angle];
 end
 
 

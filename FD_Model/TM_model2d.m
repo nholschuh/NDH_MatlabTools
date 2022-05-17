@@ -399,10 +399,10 @@ for s=1:nsrc
         close(vid_ob)
     end
     
-%     tstring = datestr(datetime);
-%     tstring = strsplit(tstring);
-%     tstring = tstring{2};
-%     tss = datetime + seconds(round(toc)*(nsrc-s)/s);
-%     tss = datestr(tss);
-%     disp(['-------- Source ',num2str(s),' Complete -- ',tstring,' -- Est. Completion - ',tss]);
+     tstring = datestr(datetime);
+     tstring = strsplit(tstring);
+     tstring = tstring{2};
+     tss = datetime + seconds(round(toc)*(nsrc-s)/s);
+     tss = datestr(tss);
+     disp(['-------- Source ',num2str(s),' Complete -- ',tstring,' -- Est. Completion - ',tss]);
 end

@@ -154,12 +154,12 @@ if line0_or_poly1 == 0
             if sizes == 0
                 sizes = 5;
             end
-            plot(newgl(1:subsetter:end,1),newgl(1:subsetter:end,2),'.','Color',col,'MarkerSize',sizes,'MarkerFaceColor',col,'DisplayName','gl')
+            plot(newgl(1:subsetter:end,1),newgl(1:subsetter:end,2),'.','Color',col,'MarkerSize',sizes,'MarkerFaceColor',col,'DisplayName','gl','HandleVisibility','off')
         else
-            plot(newgl(1:subsetter:end,1),newgl(1:subsetter:end,2),'.','Color',col,'MarkerSize',5,'MarkerFaceColor',col,'DisplayName','gl')
+            plot(newgl(1:subsetter:end,1),newgl(1:subsetter:end,2),'.','Color',col,'MarkerSize',5,'MarkerFaceColor',col,'DisplayName','gl','HandleVisibility','off')
         end
     else
-            plot(newgl(1:subsetter:end,1),newgl(1:subsetter:end,2),'Color',col,'DisplayName','gl')       
+            plot(newgl(1:subsetter:end,1),newgl(1:subsetter:end,2),'Color',col,'DisplayName','gl','HandleVisibility','off')       
     end
     
     xlim(xs)

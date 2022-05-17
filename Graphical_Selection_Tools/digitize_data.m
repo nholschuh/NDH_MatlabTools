@@ -47,7 +47,7 @@ for i = 1:length(diffmat(:,1))
 end
 minval = min(min(diffmat));
 
-if minval < 10
+if minval < 10 & lat_lon_to_stereo_flag == 0
     %%%%%%%%%%%%% assume selections on axes
     axis1 = [1 find(min(diffmat(:,1)) == diffmat(:,1))];
     axis2 = find([1:4] ~= 1 & [1:4] ~= axis1(2));

@@ -36,12 +36,17 @@ for i = 1:length(depth)
     rho(i) = rho_i*z0/(1+z0);
 end
 
-cutoff = find_nearest(rho,0.55);
-
-for i = cutoff:6000
-    z1 = exp(rho_i*k1*(depth(i)-depth(cutoff))/acc^0.5 + log(0.55/(rho_i-0.55)));
-    rho(i) = rho_i*z1/(1+z1);
+if z0 == Inf
+    rho = ones(size(rho))*0.917;
+else
+    cutoff = find_nearest(rho,0.55);
+    for i = cutoff:6000
+        z1 = exp(rho_i*k1*(depth(i)-depth(cutoff))/acc^0.5 + log(0.55/(rho_i-0.55)));
+        rho(i) = rho_i*z1/(1+z1);
+    end
 end
+
+
 
 results = [depth; rho*1000]';
 end

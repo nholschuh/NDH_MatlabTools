@@ -14,7 +14,7 @@ for i = 1:length(velocity_range)
         for k = 2:length(time_axis)
             del_t(k) = time_axis(k)*((1+(offset_axis(j)/(velocity_range(i)*time_axis(k)))^2)^0.5-1);
         end
-        new_time = time_axis + del_t;
+        new_time = time_axis + del_t';
         to_stack(:,j) = interp1(new_time,data(:,j),new_time_axis);
     end
     semblance_values(:,i) = [sum(to_stack')]'; 

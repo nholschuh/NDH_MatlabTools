@@ -167,6 +167,21 @@ photon_class_r(ri2) = [];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% beam and one for the weak beam.
 
 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                     %
+%  HACK CHANGING X AXIS TO PERCENT
+%                                     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% photon_x_l = linspace(0,1,length(photon_x_l));
+
+
+
+
 c = {'lightgray','darkgray','lightblue','slateblue','blue'};
 animation_flag = 0;
 

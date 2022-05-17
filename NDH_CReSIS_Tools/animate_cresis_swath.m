@@ -8,6 +8,7 @@ function animate_cresis_swath(in_file,surfdir,demdir,musicdir,true_datadir);
 %
 % filename - The filename (-Data), containing the date and segment number
 % surfdir - The 'CSARP_*****' name for the surf data
+% demdir - The 'CSARP_*****' name for the surf data
 % musicdir - The 'CSARP_*****' name for the music data
 % true_datadir - The root directory that houses the season name folders 
 %
@@ -20,6 +21,10 @@ function animate_cresis_swath(in_file,surfdir,demdir,musicdir,true_datadir);
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
+
+
+edge_trim = 11;
+end_trim = 20;
 
 single_image_flag = 0;
 tframe = 1;
@@ -64,9 +69,12 @@ end
 
 
 %%%%% Load DEM Data
-[bottom_data(:,1) bottom_data(:,2) bottom_data(:,3) across_index] = read_swathcsv([true_datadir,cont_dir,s_prefix,demdir,frm_n,'/',frm_n,'_',seg_n,'_bottom.csv'],5,1);
-di_swath = find(across_index == across_index(1));
-dx_swath = distance_vector(bottom_data([1 di_swath(2)-1],1),bottom_data([1 di_swath(2)-1],2),1);
+[bottom_x bottom_y bottom_data across_index] = read_swathcsv([true_datadir,cont_dir,s_prefix,demdir,frm_n,'/',frm_n,'_',seg_n,'_bottom.csv'],edge_trim,end_trim);
+di_swath = find(min(across_index(:,1)) == across_index(:,1));
+dx_swath = distance_vector(bottom_x(di_swath,:),bottom_y(di_swath,:),1);
+
+bottom_xy = [matrix_to_vector(bottom_x) matrix_to_vector(bottom_y)];
+bottom_zz = matrix_to_vector(bottom_data);
 
 
 %%%%% Load Music Data
@@ -86,13 +94,13 @@ for i = 1:length(ss.surf)
     end
 end
 
-[x y] = polarstereo_fwd(Latitude,Longitude);
+[x y] = polarstereo_fwd(Latitude(1:length(bottom_x(1,:))),Longitude(1:length(bottom_x(1,:))));
 bs = 90 - segment_bearing([x(1:end-1)' y(1:end-1)'],[x(2:end)' y(2:end)']);
 bs(end+1) = bs(end);
 
 
 dv = 700;
-dv2 = dx_swath/2;
+dv2 = nanmean(dx_swath)/2;
 
 edge1 = [x' y'];
 edge1(:,1) = edge1(:,1) + cos(deg2rad(bs-90))*dv;
@@ -103,12 +111,12 @@ edge2(:,1) = edge2(:,1) - cos(deg2rad(bs-90))*dv;
 edge2(:,2) = edge2(:,2) - sin(deg2rad(bs-90))*dv;
 
 edge1a = [x' y'];
-edge1a(:,1) = edge1a(:,1) + cos(deg2rad(bs-90))*dv2;
-edge1a(:,2) = edge1a(:,2) + sin(deg2rad(bs-90))*dv2;
+edge1a(:,1) = edge1a(:,1) + cos(deg2rad(bs-90))*dv2';
+edge1a(:,2) = edge1a(:,2) + sin(deg2rad(bs-90))*dv2';
 
 edge2a = [x' y'];
-edge2a(:,1) = edge2a(:,1) - cos(deg2rad(bs-90))*dv2;
-edge2a(:,2) = edge2a(:,2) - sin(deg2rad(bs-90))*dv2;
+edge2a(:,1) = edge2a(:,1) - cos(deg2rad(bs-90))*dv2';
+edge2a(:,2) = edge2a(:,2) - sin(deg2rad(bs-90))*dv2';
 
 dists = distance_vector(x,y);
 
@@ -127,28 +135,43 @@ else
     frame_count = 1:floor(length(Data(1,:))/frame_skip);
 end
 
-max_y = min([Time(max(removeNaN(surf(bottom_ind).y(32,:))))*10^6+2 max(Time*10^6)]);
+
+max_y = min([max(removeNaN(ss.surf(bottom_ind).y(32,:)))*10^6+2 max(Time*10^6)]);
+
+loopopts = find(~isnan(edge1a(:,1)));
+frame_counter = 1;
 
 
-for i = frame_count
+for i = loopopts(1:frame_skip:end)';
     
-    ground_points = find_nearest_xy(bottom_data(:,1:2),line_fill([edge1a(i*frame_skip,:); edge2a(i*frame_skip,:)],1,200));
+    %ground_points = find_nearest_xy(bottom_xy(:,1:2),line_fill([edge1a(i,:); edge2a(i,:)],1,200));
+    
+    plane_height = 2300;
     
     %%%%%%%%%%%%%%%%%%%%% Here we plot the swath and a plane overflying it
     aa = subplot(4,4,[1:3]);
     hold off
-    scatter3(bottom_data(:,1),bottom_data(:,2),bottom_data(:,3),3,bottom_data(:,3),'filled');
+    scatter3(bottom_xy(:,1),bottom_xy(:,2),bottom_zz(:,1),3,bottom_zz,'filled');
     hold all
-    plot3(bottom_data(ground_points,1),bottom_data(ground_points,2),bottom_data(ground_points,3)+50,'Color','red');
-    plot3(x(i*frame_skip),y(i*frame_skip),0,'.','Color','red','MarkerSize',10)
-    plot3([edge1(i*frame_skip,1) edge2(i*frame_skip,1)],[edge1(i*frame_skip,2) edge2(i*frame_skip,2)],[0 0],'Color','red');
-    plot3([bottom_data(ground_points(1),1) x(i*frame_skip)],[bottom_data(ground_points(1),2) y(i*frame_skip)],[bottom_data(ground_points(1),3)+50 0],':','Color','red');
-    plot3([bottom_data(ground_points(end),1) x(i*frame_skip)],[bottom_data(ground_points(end),2) y(i*frame_skip)],[bottom_data(ground_points(end),3)+50 0],':','Color','red');
-    view(-21.9,20.4);
-    xlim([min(bottom_data(:,1)) max(bottom_data(:,1))])
-    ylim([min(bottom_data(:,2)) max(bottom_data(:,2))])
+    plot3(bottom_x(:,i),bottom_y(:,i),bottom_data(:,i)+50,'Color','red');
+    plot3(x(i),y(i),plane_height,'.','Color','red','MarkerSize',10)
+    plot3([edge1(i,1) edge2(i,1)],[edge1(i,2) edge2(i,2)],[plane_height plane_height],'Color','red');
+    
+    
+    %%% The radiation lines to the swath
+    plot3([bottom_x(1,i) x(i)],[bottom_y(1,i) y(i)],[bottom_data(1,i)+50 plane_height],':','Color','red');
+    plot3([bottom_x(end,i) x(i)],[bottom_y(end,i) y(i)],[bottom_data(end,i)+50 plane_height],':','Color','red');
+    
+    
+    %%%%%%%%%%%%%%%%%%%%%% Determine the view orientation
+    
+    vangle = mod(median(segment_bearing([x' y'])),360);
+    
+    view(vangle+90,20.4);
+    xlim([min(bottom_xy(:,1)) max(bottom_xy(:,1))])
+    ylim([min(bottom_xy(:,2)) max(bottom_xy(:,2))])
     colormap(aa,gmt_to_matlab_colormap(1))
-    caxis([min(bottom_data(:,3))-600 max(bottom_data(:,3))+200])
+    caxis([mean(bottom_zz)-2*std(bottom_zz)-600 mean(bottom_zz)+2*std(bottom_zz)+200])
     axis_equal(0.05)
     
     grid off
@@ -159,13 +182,13 @@ for i = frame_count
     hold off
     imagesc(dists/1000,Time*10^6,lp(Data))
     hold all
-    plot_indicator_lines(dists(i*frame_skip)/1000,2,'red',1,':')
+    plot_indicator_lines(dists(i)/1000,2,'red',1,':')
     
-    if isnan(ss.surf(bottom_ind).y(32,i*frame_skip)) == 0
-    plot(dists(i*frame_skip)/1000,Time(ss.surf(bottom_ind).y(32,i*frame_skip))*10^6,'o','Color','red','MarkerFaceColor','red')
+    if isnan(ss.surf(bottom_ind).y(32,i)) == 0
+    plot(dists(i)/1000,ss.surf(bottom_ind).y(32,i)*10^6,'o','Color','red','MarkerFaceColor','red')
     end
-    colormap(flipud(gray))
-    caxis([0 50])
+    colormap(a,flipud(gray))
+    caxis([15 30])
     
     
     NDH_Style()
@@ -177,13 +200,13 @@ for i = frame_count
     b = subplot(4,4,[8 12 16]);
     hold off
     plot(1,1)
-    surface(cx_theta,cx_time,zeros(size(squeeze(Topography.img(:,:,i*frame_skip)))),squeeze(Topography.img(:,:,i*frame_skip)))
+    pcolor(cx_theta,cx_time,lp(squeeze(Tomo.img(:,:,i))))
     hold all
-    real_inds = find(ss.surf(bottom_ind).y(:,i*frame_skip) ~= 0);
-    plot(rad2deg(theta(real_inds)),Time(ss.surf(bottom_ind).y(real_inds,i*frame_skip))*10^6,':','Color','red','LineWidth',2)
-    colormap(flipud(gray))
+    real_inds = find(ss.surf(bottom_ind).y(:,i) ~= 0);
+    %plot(rad2deg(theta(real_inds)),ss.surf(bottom_ind).y(real_inds,i)*10^6,':','Color','red','LineWidth',2)
+    colormap(b,flipud(gray))
     shading interp
-    caxis([0 7])
+    caxis([15 30])
     ylim([0 40])
     xlim(rad2deg([min(theta) max(theta)]))
     set(gca,'YDir','reverse')
@@ -200,19 +223,21 @@ for i = frame_count
 
     
     axes(aa)
-    grow_axis(4)
+    grow_axis(2)
+    axis off
     
     
     pause(0.01)
     if single_image_flag == 0
-        generate_frames(['temp'],['temp'],i);
+        generate_frames(['temp'],['temp'],frame_counter);
+        frame_counter = frame_counter+1;
     else
         pdf_ndh('PaperFigure_Flight_XS',0,0,1);
     end
 end
 
 if single_image_flag == 0
-    animate_frames(['Manuscript_CX_',frm_n,'_',sprintf('%0.3d',frms{kk}(jj)),'_Anim'],['temp'],160/frame_skip);
+    animate_frames(['Manuscript_CX_',frm_n,'_',seg_n,'_Anim'],['temp'],160/frame_skip);
 else
     
 end

@@ -81,7 +81,7 @@ KY1 = KY0 * (2*pi/dy);
 [KX,KY] = meshgrid(KX1,KY1); 
 freq_grid = sqrt(KX.*KX + KY.*KY);
 
-lpf = (freq_grid > min_f & freq_grid < max_f); 
+lpf = (freq_grid >= min_f*2*pi & freq_grid <= max_f*2*pi); 
 
 idata = fft2(data);
 filt_data = ifft2(idata.*lpf);
