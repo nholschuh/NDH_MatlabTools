@@ -1,9 +1,0 @@
-<PAMDataset>
-  <SRS>PROJCS["unnamed",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433],AUTHORITY["EPSG","4326"]],PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",70],PARAMETER["central_meridian",-45],PARAMETER["scale_factor",1],PARAMETER["false_easting",0],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]]]</SRS>
-  <Metadata>
-    <MDI key="AREA_OR_POINT">Area</MDI>
-  </Metadata>
-  <PAMRasterBand band="1">
-    <ColorInterp>Gray</ColorInterp>
-  </PAMRasterBand>
-</PAMDataset>
