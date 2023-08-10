@@ -25,8 +25,16 @@ if exist('name_append') == 0
 end
 
 if iscell(additional_vars) == 0
+    if length(additional_vars) == 0
+        no_flag = 1;
+    else
+        no_flag = 0;
+    end
     additional_vars = {additional_vars};
+else
+    no_flag = 0;
 end
+
 if iscell(exclude_vars) == 0
     exclude_vars = {exclude_vars};
 end
@@ -52,11 +60,13 @@ save_string = ['save(''',filename(1:end-4),name_append,'.mat'','''];
 for i = 1:length(start_vars);
     save_string = [save_string,start_vars{i},''','''];
 end
-for i = 1:length(additional_vars)
-    save_string = [save_string,additional_vars{i},''','''];
+if no_flag == 0
+    for i = 1:length(additional_vars)
+        save_string = [save_string,additional_vars{i},''','''];
+    end
 end
 
-save_string = [save_string(1:end-3),'-v7.3'');'];
+save_string = [save_string(1:end-1),'''-v7.3'');'];
 
 end
 

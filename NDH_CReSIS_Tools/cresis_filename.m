@@ -21,12 +21,24 @@ function f_path = cresis_filename(y,m,d,f,s,file_or_path);% (C) Nick Holschuh - 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 
-if max(size(y) == 5) == 1 & max(size(y) == 1) ~= 1
+if nargin == 2
+    file_or_path = m;
+end
+
+if max(size(y) == 5) == 1
     s = y(:,5);
     f = y(:,4);
     d = y(:,3);
     m = y(:,2);
     y = y(:,1);
+end
+
+if isstr(y) == 1
+    s = eval(y(13:15));
+    f = eval(y(10:11));
+    d = eval(y(7:8));
+    m = eval(y(5:6));
+    y = eval(y(1:4));
 end
 
 if exist('file_or_path') == 0
@@ -76,7 +88,7 @@ end
 rep_num = length(s);
 file_counter = 1;
 
-fpath = [];
+f_path = [];
 
 
 for i = 1:rep_num
@@ -94,7 +106,7 @@ for i = 1:rep_num
         if file_or_path == 0
             tpath = ['Data_',dirname,'_',sprintf('%0.3d',dv(i,5)),'.mat'];
         else
-            tpath = [DataPath,'CReSIS_Bulk_Download\',cont_path,'\',season,'\CSARP_standard\',dirname,'\Data_',dirname,'_',sprintf('%0.3d',dv(i,5)),'.mat'];
+            tpath = [DataPath,cont_path,'/',season,'/CSARP_standard/',dirname,'/Data_',dirname,'_',sprintf('%0.3d',dv(i,5)),'.mat'];
         end
         
         if exist(tpath) ~= 0 & file_or_path == 1

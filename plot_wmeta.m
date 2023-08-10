@@ -30,12 +30,16 @@ else
     set(ph,'UserData',varargin{3});
 end
 
-dcm = datacursormode(fh);
 datacursormode on
+dcm = datacursormode(fh);
 set(dcm, 'updatefcn', @myfunction)
+set(fh,'WindowButtonDownFcn',@mytestcallback)
 end
 
-
+function mytestcallback(obj,event_obj)
+    %% Delete old tooltips on new click
+    delete(findall(gcf,'Type','hggroup'))
+end
 
 function output_txt = myfunction(obj,event_obj)
 % Display the position of the data cursor
@@ -56,15 +60,18 @@ end
 marker_ind = obj.Cursor.DataIndex;
 
 if isstr(obj.Host.UserData) == 1
-    output_txt(end+1:end+2) = {[' '],['Value: ',obj.Host.UserData(marker_ind)]};
+    if max(size(obj.Host.UserData)) == 1
+        output_txt(end+1:end+2) = {[' '],['Value: ',true_name(obj.Host.UserData(marker_ind))]};
+    else
+        output_txt(end+1:end+2) = {[' '],['Value: ',true_name(obj.Host.UserData(marker_ind,:))]};
+    end
 elseif iscell(obj.Host.UserData) == 1
-    output_txt(end+1:end+2) = {[' '],['Value: ',obj.Host.UserData{marker_ind}]};
+    output_txt(end+1:end+2) = {[' '],['Value: ',true_name(obj.Host.UserData{marker_ind})]};
 else
     output_txt(end+1) = {[' ']};
     for i = 1:length(obj.Host.UserData(1,:));
-        print(obj.Host.UserData(1,:))
+        %disp(obj.Host.UserData(1,:))
         output_txt(end+1) = {['Value',num2str(i),': ',num2str(obj.Host.UserData(marker_ind,i))]};
     end
 end
-
 end

@@ -1,4 +1,4 @@
-function [s_prefix ant_or_gre] = cresis_season(y,m,d);
+function [s_prefix ant_or_gre] = cresis_season(y,m,d,prompt0_ant1_gre2);
 % (C) Nick Holschuh - U. of Washington - 2018 (Nick.Holschuh@gmail.com)
 % Identifies the season prefix based on dates of acquisition;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -8,6 +8,7 @@ function [s_prefix ant_or_gre] = cresis_season(y,m,d);
 % y - The year of acquisition (or a cresis filename)
 % m - The month of acquisition
 % d - The day of acquisition
+% prompt0_ant1_gre2 - 
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % The outputs are as follows:
@@ -17,6 +18,20 @@ function [s_prefix ant_or_gre] = cresis_season(y,m,d);
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
+
+if exist('y') == 0
+    d = 0;
+    m = 0;
+    y = 0;
+end
+
+%%%%%%% There are a small number of flight days in which both campaigns
+%%%%%%% were running apparently. By default, this code will assume you want
+%%%%%%% the Antarctic Season. If you would prefer it prompt you to ask for
+%%%%%%% a selection, chanage the value to zero.
+if exist('prompt0_ant1_gre2') == 0
+    prompt0_ant1_gre2 = 1;
+end
 
 if isstr(y) == 1
     d = eval(y(12:13));
@@ -34,7 +49,12 @@ if compile_seasoninfo == 1
     %%%%%%%%%%%%% Aggregate the Antarctica Dates
     a_dates = [];
     
-    cd('F:\Graduate_Work\Data\CReSIS_Bulk_Download\Antarctica')
+    if exist('F:\Graduate_Work\Data\CReSIS_Bulk_Download\Antarctica')
+        cd('F:\Graduate_Work\Data\CReSIS_Bulk_Download\Antarctica')
+    elseif exist('/mnt/data01/Data/RadarData/Antarctica/')
+        cd('/mnt/data01/Data/RadarData/Antarctica/')
+    end
+    
     
     a_names = folders();
     a_names = a_names(1:end);
@@ -43,9 +63,6 @@ if compile_seasoninfo == 1
     
     
     for i = 1:length(files);
-        if i == 16
-            keyboard
-        end
         load(files(i).name);
         dates{i} = datenum(Data_Vals2(:,15),Data_Vals2(:,14),Data_Vals2(:,13));
         dates{i} = remove_duplicates(dates{i});
@@ -64,10 +81,13 @@ if compile_seasoninfo == 1
      %%%%%%%%%%%%% Aggregate the Greenland Dates
     g_dates = [];
     
-    cd('F:\Graduate_Work\Data\CReSIS_Bulk_Download\Greenland')
+    if exist('F:\Graduate_Work\Data\CReSIS_Bulk_Download\Greenland')
+        cd('F:\Graduate_Work\Data\CReSIS_Bulk_Download\Greenland')
+    elseif exist('/mnt/data01/Data/RadarData/Greenland/')
+        cd('/mnt/data01/Data/RadarData/Greenland/')
+    end
     
     g_names = folders();
-    g_names([19 26]) = [];
     
     files = dir('1*.mat');
     files = [files; dir('2*.mat')];
@@ -91,7 +111,7 @@ if compile_seasoninfo == 1
     
     clearvars -except a_dates g_dates a_names g_names y m d
     
-    save([OnePath,'Matlab_Code\NDH_Tools\NDH_CReSIS_Tools\season_metadata.mat'],'a_dates','g_dates','a_names','g_names')
+    save([OnePath,'Matlab_Code/NDH_Tools/NDH_CReSIS_Tools/season_metadata.mat'],'a_dates','g_dates','a_names','g_names')
     end
 else
     load season_metadata.mat
@@ -107,12 +127,32 @@ if length(datematch) == 0
     s_prefix = [];
     ant_or_gre = [];
 else
-    if full_dates(datematch,3) == 1
-        s_prefix = a_names(full_dates(datematch,2)).name;
-        ant_or_gre = 1;
+    s_prefix = [];
+    ant_or_gre = [];
+    for i = 1:length(datematch)
+        if full_dates(datematch(i),3) == 1
+            s_prefix{i} = a_names(full_dates(datematch(i),2)).name;
+            ant_or_gre(i) = 1;
+        else
+            s_prefix{i} = g_names(full_dates(datematch(i),2)).name;
+            ant_or_gre(i) = 2;
+        end
+    end
+    if length(ant_or_gre) > 1
+        if prompt0_ant1_gre2 == 0
+        season_selection = listdlg('ListString',s_prefix,'PromptString','Select the most likely season:');
+        elseif prompt0_ant1_gre2 == 1
+            season_selection = find(full_dates(datematch,3) == 1);
+            season_selection = season_selection(1);
+        else
+            season_selection = find(full_dates(datematch,3) == 2);
+            season_selection = season_selection(1);            
+        end
+        s_prefix = s_prefix{season_selection};
+        ant_or_gre = ant_or_gre(season_selection);
     else
-        s_prefix = g_names(full_dates(datematch,2)).name;
-        ant_or_gre = 2;
+        s_prefix = s_prefix{1};
+        ant_or_gre = ant_or_gre(1);
     end
 end
 

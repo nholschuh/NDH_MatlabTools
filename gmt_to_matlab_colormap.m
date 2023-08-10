@@ -28,18 +28,18 @@ end
 
 if isnumeric(filein) == 1
     if filein == 1
-        filein = [OnePath,'GMT_Code\colormaps\elevation.cpt'];
+        filein = [OnePath,'GMT_Code/colormaps/elevation.cpt'];
         keep_proportions_temp = 1;
     elseif filein == 2
-        filein =  [OnePath,'GMT_Code\colormaps\velocity_linear_continuous.cpt'];
+        filein =  [OnePath,'GMT_Code/colormaps/velocity_linear_continuous.cpt'];
     elseif filein == 3
-        filein =  [OnePath,'GMT_Code\colormaps\velocity_log_discrete.cpt'];
+        filein =  [OnePath,'GMT_Code/colormaps/velocity_log_discrete.cpt'];
         keep_proportions_temp = 1;
     elseif filein == 4
-        filein =  [OnePath,'GMT_Code\colormaps\thickness_rainbow.cpt'];
+        filein =  [OnePath,'GMT_Code/colormaps/thickness_rainbow.cpt'];
         keep_proportions_temp = 1;
     elseif filein == 5
-        filein =  [OnePath,'GMT_Code\colormaps\jet_ndh.cpt'];
+        filein =  [OnePath,'GMT_Code/colormaps/jet_ndh.cpt'];
         keep_proportions_temp = 1;
     end
 end

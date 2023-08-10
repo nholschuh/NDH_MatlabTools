@@ -14,8 +14,8 @@ if movie_flag == 1
     mkdir ./Animation_Frames/
 end
 
-o_f_horizontal = 6;
-o_f_vertical = 6; % - Change this for enhanced Overlap of individual slope cells
+o_f_horizontal = 15;
+o_f_vertical = 10; % - Change this for enhanced Overlap of individual slope cells
 
 snr_thresh = 0.00001; % - Change this for the SNR threshold (dB)
 snr_fac = 10; % - Secondary SNR evaluation - the number of standard deviations below the mean power for the trace for a cutoff

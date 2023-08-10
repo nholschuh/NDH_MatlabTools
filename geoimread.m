@@ -307,7 +307,7 @@ fclose(fid);
 %--- BELOW is to make it more robust if no mapping toolbox ---
 
 function I = robustgeotiffinfo(fname)
-if license('test','map_toolbox')
+if 0 %license('test','map_toolbox')
     I=geotiffinfo(fname);
 else
     I=imfinfo(fname);
@@ -326,7 +326,7 @@ else
 end
 
 function [x,y]=robustpixcenters(I)
-if license('test','map_toolbox')
+if 0 %license('test','map_toolbox')
     [x,y]=pixcenters(I);
 else
     %I have not read documentation... but this only works for rectilinear systems.

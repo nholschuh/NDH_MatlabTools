@@ -1,4 +1,4 @@
-function [new_data shift_amount depth_axis surface_elev bed_elev] = depth_shift(data,time,surface,elevation,bed,disp_flag);
+function [new_data shift_amount depth_axis surface_elev bed_elev bedmultiple] = depth_shift(data,time,surface,elevation,bed,disp_flag);
 % (C) Nick Holschuh - Penn State University - 2015 (Nick.Holschuh@gmail.com)
 % This converts radar in time to the true elevation coordinates
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -78,12 +78,19 @@ if exist('bed') == 1
     
     thickness_time = bed_time-surf_time;
     thickness = thickness_time*cice/2;
+    
+    multiple_time = surf_time*2;
+    multiple_thickness = (multiple_time-surf_time)*cice/2;
+    
+    bedmultiple_time = surf_time+thickness_time*2;
+    bedmultiple_thickness = (bedmultiple_time-surf_time)*cice/2;
+    
 end
 
 
 
-new_data1 = zeros(size(data));
-new_data2 = zeros(size(data));
+new_data1 = ones(size(data))*min(min(data));
+new_data2 = ones(size(data))*min(min(data));
 
 dt = time(2)-time(1);
 dx = cice*dt/2;
@@ -120,13 +127,36 @@ end
 
 top = max(surface_elev) + 100;
 
+%% This computes the bed elevation if it is supplied
+if exist('bed') == 1
+    bed_elev = surface_elev - thickness;
+else
+    bed_elev = ones(size(surface_elev))*NaN;
+end
+depth_axis = fliplr(top-dx*(length(time)-1):dx:top);
 
 surface_elev = interpNaN(surface_elev);
 
+if exist('bedmultiple_thickness')
+    bedmultiple = surface_elev-bedmultiple_thickness;
+else
+    bedmultiple = 0;
+end
+
+%% Here we do the final shift
 for i = 1:length(data(1,:))
     shift_amount2(i) = round((top-surface_elev(i))/dx)+1;
     select_inds = 1:length(time)-shift_amount2(i)+1;
     new_data2(shift_amount2(i):end,i) = new_data1(select_inds,i);
+    
+    
+%     %%%%%%%% NaN out below the bed
+%     if isnan(bed_elev) == 0
+%         nan_ind = find_nearest(depth_axis,bed_elev(i));
+%         new_data2(nan_ind+5:end,i) = NaN;
+%     end
+    
+    
     if mod(i-1,steps) == 0
         if disp_flag == 1
         disp([num2str(round(10*(i-1)/steps)),'% Complete - Elevation Shift'])
@@ -136,14 +166,9 @@ end
 
 shift_amount = shift_amount1-shift_amount2;
 new_data = new_data2;
-depth_axis = fliplr(top-dx*(length(time)-1):dx:top);
 
-%% This computes the bed elevation if it is supplied
-if exist('bed') == 1
-    bed_elev = surface_elev - thickness;
-else
-    bed_elev = ones(size(surface_elev))*NaN;
-end
+
+
   
   
 

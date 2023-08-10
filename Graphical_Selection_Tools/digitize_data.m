@@ -1,4 +1,4 @@
-function [outdata xaxis yaxis] = digitize_data(image_file,datatype,lat_lon_to_stereo_flag);
+function [outdata xaxis yaxis] = digitize_data(image_file,datatype,lat_lon_to_stereo_flag,nonlinear_flag);
 % (C) Nick Holschuh - U. of Washington - 2018 (Nick.Holschuh@gmail.com)
 % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -23,6 +23,10 @@ if exist('datatype') == 0
     datatype = 0;
 end
 
+if exist('nonlinear_flag') == 0
+    nonlinear_flag = 0;
+end
+
 data = imread(image_file);
 imagesc(data)
 maximize
@@ -36,6 +40,7 @@ if exist('lat_lon_to_stereo_flag') == 0
 end
 
 if lat_lon_to_stereo_flag == 1
+    calibration_latlon = calibration_vals;
     [calibration_vals(:,1) calibration_vals(:,2)] = polarstereo_fwd(calibration_vals(:,2),calibration_vals(:,1));
 end
 
@@ -47,19 +52,23 @@ for i = 1:length(diffmat(:,1))
 end
 minval = min(min(diffmat));
 
-if minval < 10 & lat_lon_to_stereo_flag == 0
+if minval < 10 & lat_lon_to_stereo_flag == 0 & nonlinear_flag == 0
     %%%%%%%%%%%%% assume selections on axes
     axis1 = [1 find(min(diffmat(:,1)) == diffmat(:,1))];
     axis2 = find([1:4] ~= 1 & [1:4] ~= axis1(2));
     
     [cvx] = polyfit(calibration_points(axis1,1),calibration_vals(axis1,1),1);
     [cvy] = polyfit(calibration_points(axis2,2),calibration_vals(axis2,2),1);    
-else
+elseif nonlinear_flag == 0
     %%%%%%%%%%%%% assume selections are distributed across the image,
     %%%%%%%%%%%%% develop conversion functions for the x/y coordinates
     
     [cvx] = polyfit(calibration_points(:,1),calibration_vals(:,1),1);
     [cvy] = polyfit(calibration_points(:,2),calibration_vals(:,2),1);
+else
+    
+    [cvx] = polyfit(calibration_points(:,1),calibration_vals(:,1),2);
+    [cvy] = polyfit(calibration_points(:,2),calibration_vals(:,2),2);   
 end
 
 title('Define X Axis');

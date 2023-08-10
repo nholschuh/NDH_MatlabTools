@@ -1,5 +1,8 @@
 function [phi,lambda]=polarstereo_inv(x,y,ant0_gre1_gre45,a,e,phi_c,lambda_0)
 %POLARSTEREO_INV transforms map coordinates to lat/lon data for a polar stereographic system
+%
+% ant0_gre1_gre45 -- default for greenland is 2
+%
 %   [LAT,LON]=POLARSTEREO_INV(X,Y,EARTHRADIUS,ECCENTRICITY,LAT_TRUE,LON_POSY) 
 %   LAT and LON are in decimal degrees with negative numbers (-) for S and W. 
 %   X and Y are the map coordinates (scalars, vectors, or matrices of equal size).

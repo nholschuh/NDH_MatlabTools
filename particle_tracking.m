@@ -97,7 +97,13 @@ end
 if vec_or_mesh == 0
     x_orig = x;
     y_orig = y;
-    [x y] = meshgrid(x,y);
+    if length(x(1,:)) == 1
+	x = x';
+    end
+    if length(y(1,:)) == 1
+	y = y';
+    end
+    %[x y] = meshgrid(x,y);
     et = combvec(x,y(1))';
     eb = combvec(x,y(end))';
     el = combvec(x(1),y)';

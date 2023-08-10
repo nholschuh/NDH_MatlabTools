@@ -39,7 +39,8 @@ if exist('header') == 1
     for i = 1:length(header)
         write_str = [write_str '%s' delimit_opt ' '];
     end
-    write_str = [write_str(1:end-1),'\n'];
+    write_str = [write_str(1:end-(1+length(delimit_opt))),'\n'];
+    
        
     %%%%%%%%%%% Add the header words to the first row
     fprintf_str = ['fprintf(fid, write_str,'];

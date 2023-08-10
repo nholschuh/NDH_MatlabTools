@@ -41,7 +41,11 @@ if iscell(filename) == 0
     name_parts = strsplit(filename,'_');
     for i = 1:length(name_parts)
         if length(name_parts{i}) == 8
-            dec_day_mult = datenum(eval(name_parts{i}(1:4)),eval(name_parts{i}(5:6)),eval(name_parts{i}(7:8)));
+            try
+                dec_day_mult = datenum(eval(name_parts{i}(1:4)),eval(name_parts{i}(5:6)),eval(name_parts{i}(7:8)));
+            catch
+                dec_day_mult = 2000;
+            end
             break
         else
             dec_day_mult = 2000;
